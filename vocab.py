@@ -108,6 +108,30 @@ def func_modulus(a, b):
         return b % a
     return 0 # TODO: give errors?
 
+@defun_unary(',')
+def func_flatten(a):
+    return flatten(a)
+
+@defun_binary(',')
+def func_append(a, b):
+    if is_atom(a):
+        if is_atom(b):
+            return [a, b]
+        else:
+            return [a] + b
+    elif is_atom(b):
+        return a + [b]
+    else:
+        return a + b
+
+@defun_unary(';')
+def func_singleton(a):
+    return [a]
+
+@defun_binary(';')
+def func_pair(a, b):
+    return [a, b]
+
 def variadize(func, binary=None):
     if binary is None:
         unary, binary = func
@@ -126,64 +150,112 @@ def variadize(func, binary=None):
     return variadic
 
 @defop_unary('~')
-def oper_flip(func):
+def oper_const_or_flip(f):
+    if is_value(f):
+        return variadize(lambda a: f,
+                         lambda a, b: f)
     return variadize(lambda a: func(a),
                      lambda a, b: func(b, a))
 
 @defop_binary('~')
-def oper_compose_pre(func1, func2):
-    return variadize(lambda a: func1(func2(a)),
-                     lambda a, b: func1(func2(a), func2(b)))
+def oper_curry_or_precompose(f, g):
+    if is_value(f):
+        if is_value(g):
+            return variadize(lambda a: [f, g],
+                             lambda a, b: [f, g])
+        return variadize(lambda a: g(f, a),
+                         lambda a, b: g(f, b))
+    elif is_value(g):
+        return variadize(lambda a: f(a, g),
+                         lambda a, b: f(a, g))
+    return variadize(lambda a: f(g(a)),
+                     lambda a, b: f(g(a), g(b)))
 
 @defop_unary('@')
-def oper_swap_arity(func):
-    return variadize(lambda a: func(a, a),
-                     lambda a, b: func(b))
+def oper_swap_arity(f):
+    return variadize(lambda a: f(a, a),
+                     lambda a, b: f(b))
 
 @defop_binary('@')
-def oper_compose_post(func1, func2):
-    return variadize(lambda a: func1(func2(a)),
-                     lambda a, b: func1(func2(a, b)))
+def oper_postcompose(f, g):
+    return variadize(lambda a: f(g(a)),
+                     lambda a, b: f(g(a, b)))
 
 @defop_unary('(')
-def oper_left_hook_unary(func):
-    return variadize(lambda a: [func(a), a],
-                     lambda a, b: [func(a), b])
+def oper_left_unary_hook(f):
+    return variadize(lambda a: [f(a), a],
+                     lambda a, b: [f(a), b])
 
 @defop_binary('(')
-def oper_left_hook_binary(func1, func2):
-    return variadize(lambda a: func2(func1(a), a),
-                     lambda a, b: func2(func1(a), b))
+def oper_left_hook(f, g):
+    return variadize(lambda a: g(f(a), a),
+                     lambda a, b: g(f(a), b))
 
 @defop_unary(')')
-def oper_right_hook_unary(func):
-    return variadize(lambda a: [a, func(a)],
-                     lambda a, b: [a, func(b)])
+def oper_right_unary_hook(f):
+    return variadize(lambda a: [a, f(a)],
+                     lambda a, b: [a, f(b)])
 
 @defop_binary(')')
-def oper_right_hook_binary(func1, func2):
-    return variadize(lambda a: func1(a, func2(a)),
-                     lambda a, b: func1(a, func2(b)))
+def oper_right_hook(f, g):
+    return variadize(lambda a: f(a, g(a)),
+                     lambda a, b: f(a, g(b)))
 
 @defop_unary('[')
-def oper_left_fork_unary(func):
-    return variadize(lambda a: [func(a), a],
-                     lambda a, b: [func(a, b), b])
+def oper_left_unary_fork(f):
+    return variadize(lambda a: [f(a), a],
+                     lambda a, b: [f(a, b), b])
 
 @defop_binary('[')
-def oper_left_fork_binary(func1, func2):
-    return variadize(lambda a: func2(func1(a), a),
-                     lambda a, b: func2(func1(a, b), b))
+def oper_left_fork(f, g):
+    return variadize(lambda a: g(f(a), a),
+                     lambda a, b: g(f(a, b), b))
 
 @defop_unary(']')
-def oper_right_fork_unary(func):
-    return variadize(lambda a: [a, func(a)],
-                     lambda a, b: [a, func(a, b)])
+def oper_right_unary_fork(f):
+    return variadize(lambda a: [a, f(a)],
+                     lambda a, b: [a, f(a, b)])
 
 @defop_binary(']')
-def oper_right_fork_binary(func1, func2):
-    return variadize(lambda a: func1(a, func2(a)),
-                     lambda a, b: func1(a, func2(a, b)))
+def oper_right_fork(f, g):
+    return variadize(lambda a: f(a, g(a)),
+                     lambda a, b: f(a, g(a, b)))
+
+@defop_unary('`')
+def oper_unary_thread(f):
+    if is_value(f):
+        return variazide(thread_unary(lambda a: f, 0),
+                         thread_binary(lambda a, b: f, 0, 0))
+    return variadize(thread_unary(f, 0),
+                     thread_binary(f, 0, 0))
+
+@defop_binary('`')
+def oper_binary_thread(f, g):
+    if is_value(f):
+        if is_value(g):
+            (_, unary), (_, right), (_, left) = reshape(g, [3])
+            return variadize(thread_unary(lambda a: f, round(unary)),
+                             thread_binary(lambda a, b: f,
+                                           round(left),
+                                           round(right)))
+        (_, unary), (_, right), (_, left) = reshape(f, [3])
+        return variadize(thread_unary(g, round(unary)),
+                         thread_binary(g,
+                                       round(left),
+                                       round(right)))
+    elif is_value(g):
+        (_, unary), (_, right), (_, left) = reshape(g, [3])
+        return variadize(thread_unary(f, round(unary)),
+                         thread_binary(f,
+                                       round(left),
+                                       round(right)))
+    def dynamic_thread_unary(a):
+        (_, level) = reshape(f(a), [])
+        return thread_unary(g, level)(a)
+    def dynamic_thread_binary(a, b):
+        _, (_, right), (_, left) = reshape(f(a, b), [3])
+        return thread_binary(g, left, right)(a, b)
+    return variadize(dynamic_thread_unary, dynamic_thread_binary)
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}

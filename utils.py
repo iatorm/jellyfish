@@ -1,4 +1,4 @@
-
+from itertools import cycle
 
 def char_to_data(c):
     return (False, ord(c))
@@ -7,7 +7,7 @@ def digits_to_data(d):
     return (True, int(d))
 
 def is_value(item):
-    return type(item) is not callable
+    return not callable(item)
 
 def is_atom(value):
     return type(value) is not list
@@ -19,8 +19,29 @@ def shape(value):
         shapes = zip(*[shape(item) for item in value])
         return [len(value)] + [min(x) for x in shapes]
 
+def flatten(value):
+    if is_atom(value):
+        return [value]
+    return [subitem for item in value for subitem in flatten(item)]
+
+def grid(iterator, shape):
+    if shape:
+        return [grid(iterator, shape[1:]) for i in range(shape[0])]
+    return next(iterator)
+
+def reshape(value, shape):
+    iterator = cycle(flatten(value))
+    return grid(iterator, shape)
+
 def rank(value):
     return len(shape(value))
+
+def height(value):
+    if is_atom(value):
+        return 0
+    if value:
+        return 1 + max(height(item) for item in value)
+    return 1
 
 def incneg(n):
     return n + (n<0)
@@ -43,4 +64,4 @@ def thread_binary(f, rank1, rank2):
     return threaded_f
 
 def thread_unary(f, rank):
-    return lambda a: thread_binary(f, rank)(a, None)
+    return lambda a: thread_binary(lambda x, y: f(x), rank, 0)(a, None)

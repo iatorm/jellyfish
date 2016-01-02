@@ -50,11 +50,11 @@ def find_item(items, max_x, max_y, x, y, direction):
                 char = item.content
                 if char == '/': # Block all
                     return Connection(None, False, False, False)
-                elif char == '.': # Block value
+                elif char == 'V': # Block value
                     has_value = False
-                elif char == ':': # Block function
+                elif char == 'F': # Block function
                     has_func = False
-                elif char == ';': # Block arguments
+                elif char == 'A': # Block arguments
                     has_args = False
                 elif char == '\\': # Switch direction
                     if direction == Dir.east:
@@ -75,7 +75,7 @@ def parse(matrix):
     "Parse a code matrix into a graph of items."
     items = {}
     digits = "0123456789"
-    control_chars = ".:;/\\ES"
+    control_chars = "/\\VFAES"
     for y in range(len(matrix)):
         # Parse a row
         x = 0
@@ -188,3 +188,16 @@ def interpret(matrix):
     items = parse(matrix)
     corner = fill(items)
     return corner.value
+
+def prettyprint(value, quotes=True):
+    if is_atom(value):
+        is_num, data = value
+        if is_num:
+            return str(data)
+        else:
+            return "'"*quotes + chr(int(abs(data))) + "'"*quotes
+    all_chars = all(not a[0] for a in flatten(value))
+    if all_chars and height(value) == 1:
+        return '"' + ''.join(prettyprint(item, quotes=False) for item in value) + '"'
+    else:
+        return "[" + " ".join(prettyprint(item) for item in value) + "]"
