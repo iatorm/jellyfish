@@ -87,7 +87,7 @@ def parse(matrix):
                     parsed_char = '\n'
                 else:
                     parsed_char = matrix[y][x+1]
-                item = Item(ItemType.data, char_to_data(parsed_char))
+                item = Item(ItemType.data, to_char_atom(parsed_char))
                 items[(x,y)] = item
                 x += 2
             elif char == '"':
@@ -107,7 +107,7 @@ def parse(matrix):
                     else:
                         i += 1
                     chars.append(parsed_char)
-                item = Item(ItemType.data, [char_to_data(c) for c in chars])
+                item = Item(ItemType.data, [to_char_atom(c) for c in chars])
                 items[(x,y)] = item
                 x = i + 1
             elif char in digits:
@@ -117,7 +117,7 @@ def parse(matrix):
                 while i < len(matrix[y]) and matrix[y][i] in digits:
                     num += matrix[y][i]
                     i += 1
-                item = Item(ItemType.data, digits_to_data(num))
+                item = Item(ItemType.data, to_num_atom(int(num)))
                 items[(x,y)] = item
                 x = i
             elif char in func_defs:
@@ -191,12 +191,11 @@ def interpret(matrix):
 
 def prettyprint(value, quotes=True):
     if is_atom(value):
-        is_num, data = value
-        if is_num:
-            return str(data)
+        if value.type == AtomType.num:
+            return str(value.value)
         else:
-            return "'"*quotes + chr(int(abs(data))) + "'"*quotes
-    all_chars = all(not a[0] for a in flatten(value))
+            return "'"*quotes + chr(abs(int(value.value))) + "'"*quotes
+    all_chars = all(atom.type == AtomType.char for atom in flatten(value))
     if all_chars and height(value) == 1:
         return '"' + ''.join(prettyprint(item, quotes=False) for item in value) + '"'
     else:

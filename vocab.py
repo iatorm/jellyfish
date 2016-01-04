@@ -9,7 +9,6 @@ class Roles(Enum):
     function = 0
     operator = 1
 
-
 def get_defs(role):
     if role == Roles.function:
         return func_defs
@@ -34,17 +33,10 @@ defop_unary = lambda char: defun(char, 1, Roles.operator)
 defop_binary = lambda char: defun(char, 2, Roles.operator)
 
 def mathy_unary(f):
-    def mathy_f(x):
-        flag, a = x
-        return flag, f(a)
-    return mathy_f
+    return lambda x: Atom(x.type, f(x.value))
     
 def mathy_binary(f):
-    def mathy_f(x, y):
-        flag, a = x
-        _, b = y
-        return flag, f(a, b)
-    return mathy_f
+    return lambda x, y: Atom(x.type, f(x.value, y.value))
 
 threaded_unary = lambda rank: lambda f: thread_unary(f, rank)
 threaded_binary = lambda rank1, rank2: lambda f: thread_binary(f, rank1, rank2)
@@ -131,6 +123,40 @@ def func_singleton(a):
 @defun_binary(';')
 def func_pair(a, b):
     return [a, b]
+
+@defun_unary('$')
+def func_shape(a):
+    return [to_num_atom(dim) for dim in shape(a)]
+
+@defun_binary('$')
+def func_reshape(a, b):
+    return reshape(b, a)
+
+@defun_unary('!')
+def func_indices(a):
+    if is_atom(a):
+        return to_num_atom(0)
+    res = []
+    for ind, item in enumerate(a):
+        if is_atom(item):
+            res.append([to_num_atom(ind)])
+        else:
+            for subind in func_indices(item):
+                res.append([to_num_atom(ind)] + subind)
+    return res
+
+@defun_binary('!')
+@threaded_binary(1, -1)
+def func_index(a, b):
+    if is_atom(b):
+        return b
+    if is_atom(a):
+        return b[int(a) % len(b)]
+    for ind in a:
+        b = b[int(ind) % len(b)]
+        if is_atom(b):
+            return b
+    return b
 
 def variadize(func, binary=None):
     if binary is None:
@@ -233,28 +259,22 @@ def oper_unary_thread(f):
 def oper_binary_thread(f, g):
     if is_value(f):
         if is_value(g):
-            (_, unary), (_, right), (_, left) = reshape(g, [3])
-            return variadize(thread_unary(lambda a: f, round(unary)),
-                             thread_binary(lambda a, b: f,
-                                           round(left),
-                                           round(right)))
-        (_, unary), (_, right), (_, left) = reshape(f, [3])
-        return variadize(thread_unary(g, round(unary)),
-                         thread_binary(g,
-                                       round(left),
-                                       round(right)))
+            sole, right, left = reshape(g, [3])
+            return variadize(thread_unary(lambda a: f, int(sole)),
+                             thread_binary(lambda a, b: f, int(left), int(right)))
+        sole, right, left = reshape(f, [3])
+        return variadize(thread_unary(g, int(sole)),
+                         thread_binary(g, int(left), int(right)))
     elif is_value(g):
-        (_, unary), (_, right), (_, left) = reshape(g, [3])
-        return variadize(thread_unary(f, round(unary)),
-                         thread_binary(f,
-                                       round(left),
-                                       round(right)))
+        sole, right, left = reshape(g, [3])
+        return variadize(thread_unary(f, int(sole)),
+                         thread_binary(f, int(left), int(right)))
     def dynamic_thread_unary(a):
-        (_, level) = reshape(f(a), [])
-        return thread_unary(g, level)(a)
+        level = reshape(f(a), [])
+        return thread_unary(g, int(level))(a)
     def dynamic_thread_binary(a, b):
-        _, (_, right), (_, left) = reshape(f(a, b), [3])
-        return thread_binary(g, left, right)(a, b)
+        _, right, left = reshape(f(a, b), [3])
+        return thread_binary(g, int(left), int(right))(a, b)
     return variadize(dynamic_thread_unary, dynamic_thread_binary)
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
