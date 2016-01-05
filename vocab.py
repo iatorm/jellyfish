@@ -315,7 +315,7 @@ def unary_foldl(f):
 
 @defop_binary('/')
 def binary_fold(f, g):
-    raise Error("Binary '/' not implemented.")
+    raise Exception("Binary '/' not implemented.")
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}

@@ -75,7 +75,7 @@ def parse(matrix):
     "Parse a code matrix into a graph of items."
     items = {}
     digits = "0123456789"
-    control_chars = "BVFAXES"
+    control_chars = "BVFAESX"
     for y in range(len(matrix)):
         # Parse a row
         x = 0
