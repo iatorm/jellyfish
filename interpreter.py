@@ -48,7 +48,7 @@ def find_item(items, max_x, max_y, x, y, direction):
                 return Connection((x,y), has_value, has_func, has_args)
             elif item.type == ItemType.control:
                 char = item.content
-                if char == '/': # Block all
+                if char == 'B': # Block all
                     return Connection(None, False, False, False)
                 elif char == 'V': # Block value
                     has_value = False
@@ -56,7 +56,7 @@ def find_item(items, max_x, max_y, x, y, direction):
                     has_func = False
                 elif char == 'A': # Block arguments
                     has_args = False
-                elif char == '\\': # Switch direction
+                elif char == 'X': # Switch direction
                     if direction == Dir.east:
                         direction = Dir.south
                     else:
@@ -75,7 +75,7 @@ def parse(matrix):
     "Parse a code matrix into a graph of items."
     items = {}
     digits = "0123456789"
-    control_chars = "/\\VFAES"
+    control_chars = "BVFAXES"
     for y in range(len(matrix)):
         # Parse a row
         x = 0
@@ -120,6 +120,12 @@ def parse(matrix):
                 item = Item(ItemType.data, to_num_atom(int(num)))
                 items[(x,y)] = item
                 x = i
+            elif char == 'i':
+                # Parse input
+                input_value = parse_value(input())[0]
+                item = Item(ItemType.data, input_value)
+                items[(x,y)] = item
+                x += 1
             elif char in func_defs:
                 # Parse a function
                 item = Item(ItemType.function, func_defs[char])
@@ -190,6 +196,7 @@ def interpret(matrix):
     return corner.value
 
 def prettyprint(value, quotes=True):
+    "Convert a value into a human-readable string."
     if is_atom(value):
         if value.type == AtomType.num:
             return str(value.value)
@@ -200,3 +207,44 @@ def prettyprint(value, quotes=True):
         return '"' + ''.join(prettyprint(item, quotes=False) for item in value) + '"'
     else:
         return "[" + " ".join(prettyprint(item) for item in value) + "]"
+
+def parse_value(string):
+    digits = "0123456789"
+    string = string.lstrip()
+    if string[0] in '-.' + digits:
+        j = 1
+        while j < len(string) and string[j] in '.e' + digits:
+            j += 1
+        return to_num_atom(eval(string[:j])), string[j:]
+    elif string[0] == "'":
+        if string[1] == '\\' and string[3] == "'":
+            char = string[2]
+            if char == 'n':
+                char == '\n'
+            j = 4
+        elif string[2] == "'":
+            char = string[1]
+            j = 3
+        return to_char_atom(char), string[j:]
+    elif string[0] == '"':
+        parsed_string = ""
+        j = 1
+        while string[j] != '"':
+            if string[j] == '\\':
+                char = string[j+1]
+                if char == 'n':
+                    char = '\n'
+                parsed_string += char
+                j += 2
+            else:
+                parsed_string += string[j]
+                j += 1
+        return [to_char_atom(char) for char in parsed_string], string[j+1:]
+    elif string[0] == '[':
+        array = []
+        string = string[1:].lstrip()
+        while string[0] != ']':
+            value, string = parse_value(string)
+            array.append(value)
+            string = string.lstrip()
+        return array, string[1:]

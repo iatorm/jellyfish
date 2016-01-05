@@ -41,6 +41,22 @@ def mathy_binary(f):
 threaded_unary = lambda rank: lambda f: thread_unary(f, rank)
 threaded_binary = lambda rank1, rank2: lambda f: thread_binary(f, rank1, rank2)
 
+@defun_unary('{')
+def func_left_id(a):
+    return a
+
+@defun_binary('{')
+def func_left(a, b):
+    return a
+
+@defun_unary('}')
+def func_right_id(a):
+    return a
+
+@defun_binary('}')
+def func_right(a, b):
+    return b
+
 @defun_unary('+')
 @threaded_unary(0)
 @mathy_unary
@@ -129,10 +145,11 @@ def func_shape(a):
     return [to_num_atom(dim) for dim in shape(a)]
 
 @defun_binary('$')
+@threaded_binary(1, -1)
 def func_reshape(a, b):
     return reshape(b, a)
 
-@defun_unary('!')
+@defun_unary('@')
 def func_indices(a):
     if is_atom(a):
         return to_num_atom(0)
@@ -145,7 +162,7 @@ def func_indices(a):
                 res.append([to_num_atom(ind)] + subind)
     return res
 
-@defun_binary('!')
+@defun_binary('@')
 @threaded_binary(1, -1)
 def func_index(a, b):
     if is_atom(b):
@@ -197,12 +214,12 @@ def oper_curry_or_precompose(f, g):
     return variadize(lambda a: f(g(a)),
                      lambda a, b: f(g(a), g(b)))
 
-@defop_unary('@')
+@defop_unary('&')
 def oper_swap_arity(f):
     return variadize(lambda a: f(a, a),
                      lambda a, b: f(b))
 
-@defop_binary('@')
+@defop_binary('&')
 def oper_postcompose(f, g):
     return variadize(lambda a: f(g(a)),
                      lambda a, b: f(g(a, b)))
@@ -276,6 +293,29 @@ def oper_binary_thread(f, g):
         _, right, left = reshape(f(a, b), [3])
         return thread_binary(g, int(left), int(right))(a, b)
     return variadize(dynamic_thread_unary, dynamic_thread_binary)
+
+@defop_unary('/')
+def unary_foldl(f):
+    def folded(a):
+        if is_atom(a):
+            return a
+        if not a:
+            return to_num_atom(0)
+        x = a[0]
+        for y in a[1:]:
+            x = f(x, y)
+        return x
+    def folded_init(a, b):
+        if is_atom(b):
+            return f(a, b)
+        for y in b:
+            a = f(a, y)
+        return a
+    return variadize(folded, folded_init)
+
+@defop_binary('/')
+def binary_fold(f, g):
+    raise Error("Binary '/' not implemented.")
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}
