@@ -79,6 +79,6 @@ Not all input combinations are supported, and not all supported combinations are
 - Binary `&` gives composition of functions, using binary form of right function.
 - `(` and `)` are left and right hooks: `g(f(a), b)` and `f(a, g(b))` on input functions `f g` and argument values `a b`.
 - `[` and `]` are left and right forks: `g(f(a, b), b)` and `f(a, g(a, b))` on input functions `f g` and argument values `a b`.
-- Unary `\`` threads its argument to level 0; values are converted to constant functions.
-- Binary `\`` threads its function argument to the levels (unary, left, right) given by its value argument. If both inputs are functions, the level is dynamic and given by the left function.
+- Unary `` ` `` threads its argument to level 0; values are converted to constant functions.
+- Binary `` ` `` threads its function argument to the levels (unary, left, right) given by its value argument. If both inputs are functions, the level is dynamic and given by the left function.
 - Unary `/` is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
