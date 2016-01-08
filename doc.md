@@ -64,6 +64,12 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `*` is signum, binary is multiplication (threaded to level 0).
 - Unary `%` is reciprocal, binary is division (threaded to level 0).
 - Unary `|` is floor, binary is modulus (threaded to level 0).
+- Unary `b` is conversion to base 2, binary to given base (threaded to levels 1 on the left and 0 on the right).
+- Binary `=` is equality.
+- Unary `<` is decrementation and head of array, binary is less-than.
+- Unary `>` is incrementation and tail of array, binary is greater-than.
+- Unary `#` is length of array and length of base-10 representation of number.
+- Unary `r` is range from 0, binary from left input to right. Arrays give multidimensional ranges.
 - Unary `,` is flatten, binary is concatenation.
 - Unary `;` wraps into a singleton array, binary gives a pair.
 - Unary `$` gives the dimensions of an input array, binary reshapes right input to the shape in its left (threaded to level 1 on the left).
