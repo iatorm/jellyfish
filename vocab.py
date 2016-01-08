@@ -116,6 +116,116 @@ def func_modulus(a, b):
         return b % a
     return 0 # TODO: give errors?
 
+@defun_unary('b')
+def func_base2(a):
+    return func_base(to_num_atom(2), a)
+
+@defun_binary('b')
+@threaded_binary(1, 0)
+def func_base(a, b):
+    if is_atom(a):
+        base = a.value
+        num = b.value
+        digits = []
+        while abs(num) >= abs(base):
+            digits = [to_num_atom(num % base)] + digits
+            if type(num) is int and type(base) is int:
+                num = num // base
+            else:
+                num /= base
+        return [to_num_atom(num)] + digits
+    else:
+        num = b.value
+        digits = []
+        for item in reversed(a):
+            base = item.value
+            digits = [to_num_atom(num % base)] + digits
+            if type(num) is int and type(base) is int:
+                num = num // base
+            else:
+                num /= base
+        return digits
+
+@defun_unary('=')
+def func_unary_eq(a):
+    raise Exception("Unary '=' not implemented.")
+
+@defun_binary('=')
+def func_equals(a, b):
+    if is_atom(a) != is_atom(b):
+        return to_num_atom(0)
+    else:
+        return to_num_atom(int(a == b))
+
+@defun_unary('<')
+def func_head_dec(a):
+    if is_atom(a):
+        return Atom(a.type, a.value-1)
+    else:
+        return a[0]
+
+@defun_binary('<')
+def func_less_than(a, b):
+    if is_atom(a):
+        if is_atom(b):
+            return to_num_atom(int(a < b))
+        else:
+            return to_num_atom(1)
+    elif is_atom(b):
+        return to_num_atom(0)
+    else:
+        return to_num_atom(int(a < b))
+
+@defun_unary('>')
+def func_tail_inc(a):
+    if is_atom(a):
+        return Atom(a.type, a.value+1)
+    else:
+        return a[1:]
+
+@defun_binary('>')
+def func_greater_than(a, b):
+    if is_atom(a):
+        if is_atom(b):
+            return to_num_atom(int(a > b))
+        else:
+            return to_num_atom(0)
+    elif is_atom(b):
+        return to_num_atom(1)
+    else:
+        return to_num_atom(int(a > b))
+
+@defun_unary('#')
+def func_len(a):
+    if is_atom(a):
+        return to_num_atom(len(func_base(to_num_atom(10), a)))
+    else:
+        return to_num_atom(len(a))
+
+@defun_binary('#')
+def func_bin_len(a, b):
+    raise Exception("Binary '#' not implemented.")
+
+@defun_unary('r')
+def func_unary_range(a):
+    if is_atom(a):
+        end = int(a.value)
+        if end >= 0:
+            return [to_num_atom(x) for x in range(end)]
+        else:
+            return [to_num_atom(-x) for x in reversed(range(-end))]
+    elif a:
+        return [[x] + w
+                for x in func_range(a[0])
+                for w in func_range(a[1:])]
+    else:
+        return [[]]
+
+@defun_binary('r')
+def func_binary_range(a, b):
+    pairs = thread_binary(lambda x, y: [x, y], 0, 0)(a, b)
+    return bin_range(pairs)
+
 @defun_unary(',')
 def func_flatten(a):
     return flatten(a)

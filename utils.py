@@ -13,6 +13,24 @@ class Atom:
     def __int__(self):
         return int(self.value)
 
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __le__(self, other):
+        return self.value <= other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
+    def __ge__(self, other):
+        return self.value >= other.value
+
     def __repr__(self):
         if self.type == AtomType.num:
             return "<{}>".format(self.value)
@@ -84,3 +102,17 @@ def thread_binary(f, height1, height2):
 
 def thread_unary(f, height):
     return lambda a: thread_binary(lambda x, y: f(x), height, -1)(a, None)
+
+def bin_range(x):
+    if not x:
+        return [[]]
+    elif height(x) == 1:
+        lo, hi = map(lambda y: int(y.value), x)
+        if lo <= hi:
+            return [to_num_atom(y) for y in range(lo, hi)]
+        else:
+            return [to_num_atom(y) for y in reversed(range(hi, lo))]
+    else:
+        return [[y] + w
+                for y in bin_range(x[0])
+                for w in bin_range(x[1:])]
