@@ -56,10 +56,10 @@ def shape(value):
         shapes = zip(*[shape(item) for item in value])
         return [len(value)] + [min(x) for x in shapes]
 
-def flatten(value):
-    if is_atom(value):
+def flatten(value, max_height=0):
+    if height(value) <= max_height:
         return [value]
-    return [subitem for item in value for subitem in flatten(item)]
+    return [subitem for item in value for subitem in flatten(item, max_height)]
 
 def grid(iterator, shape):
     if shape:

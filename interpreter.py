@@ -208,6 +208,43 @@ def prettyprint(value, quotes=True):
     else:
         return "[" + " ".join(prettyprint(item) for item in value) + "]"
 
+def matrix_print(value):
+    "Convert a value into a beautiful grid-style string."
+    if is_atom(value):
+        return prettyprint(value)
+    level = height(value)
+    flat = flatten(value)
+    rows = flatten(value, 1)
+    max_len = max(len(row) for row in rows)
+    all_chars = all(atom.type == AtomType.char for atom in flat)
+    pads = [1 + max(print_len(row[i], not all_chars) if i < len(row) else 0
+                    for row in rows)
+            for i in range(max_len)]
+    if not all_chars:
+        pads[0] -= 1
+    return matrix_print_aux(value, level, pads, not all_chars)
+
+def print_len(atom, quotes):
+    if atom.type == AtomType.num:
+        return len(str(atom.value))
+    else:
+        return 3*quotes
+
+def matrix_print_aux(value, level, pads, quotes):
+    if level == 1:
+        string = ""
+        for index, item in enumerate(value):
+            if item.type == AtomType.num:
+                string += str(item.value).rjust(pads[index])
+            else:
+                char = chr(abs(int(item.value)))
+                string += ("'"*quotes + char + "'"*quotes).rjust(pads[index])
+        return string
+    else:
+        item_strings = [matrix_print_aux(item, level-1, pads, quotes)
+                        for item in value]
+        return ("\n"*(level-1)).join(item_strings)
+        
 def parse_value(string):
     digits = "0123456789"
     string = string.lstrip()
