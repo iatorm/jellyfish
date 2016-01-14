@@ -116,6 +116,18 @@ def func_modulus(a, b):
         return b % a
     return 0 # TODO: give errors?
 
+@defun_unary('x')
+def func_cart_product(a):
+    if is_atom(a):
+        return a
+    else:
+        return list(cartesian_product(a))
+
+@defun_binary('x')
+@threaded_binary(0,0)
+@mathy_binary
+def func_xor(a, b): a ^ b
+
 @defun_unary('b')
 def func_base2(a):
     return func_base(to_num_atom(2), a)
@@ -203,8 +215,14 @@ def func_len(a):
         return to_num_atom(len(a))
 
 @defun_binary('#')
-def func_bin_len(a, b):
-    raise Exception("Binary '#' not implemented.")
+@threaded_binary(1, -1)
+def func_repeat(a, b):
+    if is_atom(b):
+        b = [b]
+    if is_atom(a):
+        return b * int(a)
+    else:
+        return [y for (x,y) in zip(a,b) for _ in range(int(x))]
 
 @defun_unary('r')
 def func_unary_range(a):
@@ -301,6 +319,20 @@ def variadize(func, binary=None):
         else:
             return binary(a, b)
     return variadic
+
+@defop_unary('_')
+def oper_id(f):
+    if is_value(f):
+        raise Exception("Unary '_' on values not implemented.")
+    return f
+
+@defop_binary('_')
+def oper_left(f, g):
+    if is_value(f):
+        if is_value(g):
+            raise Exception("Binary '_' on values not implemented.")
+        return g
+    return f
 
 @defop_unary('~')
 def oper_const_or_flip(f):
@@ -404,8 +436,43 @@ def oper_binary_thread(f, g):
         return thread_binary(g, int(left), int(right))(a, b)
     return variadize(dynamic_thread_unary, dynamic_thread_binary)
 
+@defop_unary('L')
+def oper_unary_levels(f):
+    if is_value(f):
+        return oper_binary_levels(f, variadize(lambda a: a,
+                                               lambda a, b: [a, b]))
+    return oper_binary_levels(0, f)
+
+@defop_binary('L')
+def oper_binary_levels(f, g):
+    if is_value(g):
+        return oper_binary_levels(f, oper_const_or_flip(g))
+    if is_value(f):
+        def level_map(a):
+            def map_at(level):
+                return [g(x) for x in flatten(a, int(level))]
+            return thread_unary(map_at, 0)(f)
+        def level_zip(a, b):
+            def zip_at(level):
+                _, right, left = reshape(level, [3])
+                return [g(x, y) for (x, y) in zip(flatten(a, int(left)), flatten(b, int(left)))]
+            return thread_unary(zip_at, 1)(f)
+        return variadize(level_map, level_zip)
+    return variadize(lambda a: oper_binary_levels(f(a), g)(a),
+                     lambda a, b: oper_binary_levels(f(a, b), g)(a, b))
+
 @defop_unary('/')
-def unary_foldl(f):
+def oper_join_or_fold(f):
+    if is_value(f):
+        return variadize(lambda a:
+                         thread_unary(lambda times:
+                                      join_times(a, int(times)),
+                                      0)(f),
+                         lambda a, b:
+                         thread_unary(lambda times:
+                                      join_times(intersperse(a, b),
+                                                 int(times)),
+                                      0)(f))
     def folded(a):
         if is_atom(a):
             return a
@@ -424,8 +491,18 @@ def unary_foldl(f):
     return variadize(folded, folded_init)
 
 @defop_binary('/')
-def binary_fold(f, g):
-    raise Exception("Binary '/' not implemented.")
+def oper_choice(f, g):
+    if is_value(f):
+        if is_value(g):
+            return variazide(lambda a: f if is_truthy(a) else g,
+                             lambda a, b: [f if is_truthy(a) else g, b])
+        return variadize(lambda a: g(a) if is_truthy(f) else a,
+                         lambda a, b: g(b) if is_truthy(f) else g(a))
+    elif is_value(g):
+        return variadize(lambda a: f(g) if is_truthy(a) else g,
+                         lambda a, b: f(b) if is_truthy(a) else g)
+    return variadize(lambda a: [f(a)] + g(a) if is_atom(a) else [f(a[0])] + g(a[1:]),
+                     lambda a, b: f(b) if is_truthy(a) else g(b))
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}

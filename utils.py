@@ -49,6 +49,12 @@ def is_value(item):
 def is_atom(value):
     return isinstance(value, Atom)
 
+def is_truthy(value):
+    if is_atom(value):
+        return value.value != 0
+    else:
+        return value != []
+
 def shape(value):
     if is_atom(value):
         return []
@@ -60,6 +66,38 @@ def flatten(value, max_height=0):
     if height(value) <= max_height:
         return [value]
     return [subitem for item in value for subitem in flatten(item, max_height)]
+
+def join_times(value, times=1):
+    if is_atom(value) or times == 0:
+        return value
+    if times > 0:
+        joined = []
+        for item in value:
+            if is_atom(item):
+                joined += [item]
+            else:
+                joined += item
+        return join_times(joined, times-1)
+    raise Exception("Can't join a negative number of times.")
+
+def intersperse(value, array):
+    if is_atom(array):
+        return array
+    res = array[:1]
+    for item in array[1:]:
+        res += [value, item]
+    return res
+
+def cartesian_product(array):
+    if array:
+        head, *rest = array
+        if is_atom(head):
+            head = [head]
+        for item in head:
+            for word in cartesian_product(rest):
+                yield [item] + word
+    else:
+        yield []
 
 def grid(iterator, shape):
     if shape:

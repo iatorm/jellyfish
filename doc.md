@@ -64,11 +64,12 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `*` is signum, binary is multiplication (threaded to level 0).
 - Unary `%` is reciprocal, binary is division (threaded to level 0).
 - Unary `|` is floor, binary is modulus (threaded to level 0).
+- Unary `x` is Cartesian product, binary is XOR (threaded to level 0).
 - Unary `b` is conversion to base 2, binary to given base (threaded to levels 1 on the left and 0 on the right).
 - Binary `=` is equality.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.
-- Unary `#` is length of array and length of base-10 representation of number.
+- Unary `#` is length of array and length of base-10 representation of number, binary is repetition.
 - Unary `r` is range from 0, binary from left input to right. Arrays give multidimensional ranges.
 - Unary `,` is flatten, binary is concatenation.
 - Unary `;` wraps into a singleton array, binary gives a pair.
@@ -79,6 +80,7 @@ This is generalized to binary functions too, but it's more complicated.
 
 Not all input combinations are supported, and not all supported combinations are fully documented here.
 
+- `_` returns its left function argument. Its main purpose is to give arguments to operators that only take values.
 - Unary `~` on value gives a function that always returns that value, on function flips its arguments.
 - Binary `~` on two values gives a function that always returns their pair, on function+value fixes the respective input (currying), on two functions gives their composition (using binary form of left function).
 - Unary `&` swaps the arity of a function.
@@ -87,4 +89,6 @@ Not all input combinations are supported, and not all supported combinations are
 - `[` and `]` are left and right forks: `g(f(a, b), b)` and `f(a, g(a, b))` on input functions `f g` and argument values `a b`.
 - Unary `` ` `` threads its argument to level 0; values are converted to constant functions.
 - Binary `` ` `` threads its function argument to the levels (unary, left, right) given by its value argument. If both inputs are functions, the level is dynamic and given by the left function.
-- Unary `/` is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
+- Unary `/` on value `f` is join. It concatenates its argument `f` times. If two arguments are given, it intersperses the left argument into the right, and then concatenates `f` times.
+- Unary `/` on function is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
+- Binary `/` is a generalized "if", except the case of functions `f` and `g` and sole argument `a`, where `f` is applied to the head of `a` and `g` to the rest.
