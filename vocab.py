@@ -1,5 +1,6 @@
 from utils import *
 import math
+import itertools
 from enum import Enum
 
 func_defs = {}
@@ -106,7 +107,7 @@ def func_divide(a, b):
 @defun_unary('|')
 @threaded_unary(0)
 @mathy_unary
-def func_floor(a): return math.floor(a)
+def func_round(a): return math.floor(a + 0.5)
 
 @defun_binary('|')
 @threaded_binary(0, 0)
@@ -115,6 +116,22 @@ def func_modulus(a, b):
     if a != 0 != b:
         return b % a
     return 0 # TODO: give errors?
+
+@defun_unary('m')
+@threaded_unary(0)
+@mathy_unary
+def func_floor(a): return math.floor(a)
+
+@defun_binary('m')
+def func_min(a, b): return min(a, b)
+
+@defun_unary('M')
+@threaded_unary(0)
+@mathy_unary
+def func_ceil(a): return math.ceil(a)
+
+@defun_binary('M')
+def func_max(a, b): return max(a, b)
 
 @defun_unary('x')
 def func_cart_product(a):
@@ -206,6 +223,47 @@ def func_greater_than(a, b):
         return to_num_atom(1)
     else:
         return to_num_atom(int(a > b))
+
+@defun_unary('c')
+@threaded_unary(0)
+def func_to_char(a): return Atom(AtomType.char, a.value)
+
+@defun_binary('c')
+@threaded_binary(0, -1)
+def func_combinations(a, b):
+    x = a.value
+    if is_atom(b):
+        y = b.value
+        return math.factorial(a) / math.factorial(b) / math.factorial(a - b)
+    else:
+        return [list(c) for c in itertools.combinations(b, x)]
+
+@defun_unary('n')
+@threaded_unary(0)
+def func_to_num(a): return Atom(AtomType.num, a.value)
+
+@defun_binary('n')
+def func_intersection(a, b):
+    if is_atom(a):
+        a = [a]
+    if is_atom(b):
+        b = [b]
+    return [x for x in a if x in b]
+
+@defun_unary('u')
+def func_uniques(a):
+    if is_atom(a):
+        return [a]
+    else:
+        return uniques(a)
+
+@defun_binary('u')
+def func_union(a, b):
+    if is_atom(a):
+        a = [a]
+    if is_atom(b):
+        b = [b]
+    return a + [x for x in uniques(b) if x not in a]
 
 @defun_unary('#')
 def func_len(a):

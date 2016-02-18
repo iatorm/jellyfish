@@ -11,7 +11,7 @@ Each position of the grid may contain an _item_, which is one of the following:
   - A _numeric literal_, visually a horizontal run of digits. It is placed at the position of the leftmost digit.
   - A _character literal_, visually a single quote `'` followed by said character. It is placed at the position of the quote.
   - A _string literal_, visually a horizontal run of characters surrounded by double quotes. A closing quote is inferred at the end of a line. The item is placed at the left quote.
-  - An _input value_, denoted by the letter `i`. These are parsed from STDIN in the normal English reading order before the program is executed.
+  - An _input value_, denoted by the letter `i` for evaluated input and `I` for raw string input. These are parsed from STDIN in the normal English reading order before the program is executed.
 - A _function_, which transforms one or two input values into a single output value.
 - An _operator_, which transforms one or two input values or functions into a new function.
 - A _control character_, which affects the parsing process.
@@ -63,12 +63,17 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `-` is negation, binary is subtraction (threaded to level 0).
 - Unary `*` is signum, binary is multiplication (threaded to level 0).
 - Unary `%` is reciprocal, binary is division (threaded to level 0).
-- Unary `|` is floor, binary is modulus (threaded to level 0).
+- Unary `|` is round, binary is modulus (threaded to level 0).
+- Unary `m` is floor (threaded to level 0), binary is minimum.
+- Unary `M` is ceiling (threaded to level 0), binary is maximum.
 - Unary `x` is Cartesian product, binary is XOR (threaded to level 0).
 - Unary `b` is conversion to base 2, binary to given base (threaded to levels 1 on the left and 0 on the right).
 - Binary `=` is equality.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.
+- Unary `c` is conversion to char (threaded to level 0), binary is combinations (threaded to level 0 on the left).
+- Unary `n` is conversion to num (threaded to level 0), binary is intersection.
+- Unary `u` is uniques, binary is union.
 - Unary `#` is length of array and length of base-10 representation of number, binary is repetition.
 - Unary `r` is range from 0, binary from left input to right. Arrays give multidimensional ranges.
 - Unary `,` is flatten, binary is concatenation.

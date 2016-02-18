@@ -55,6 +55,13 @@ def is_truthy(value):
     else:
         return value != []
 
+def uniques(array):
+    out = []
+    for item in array:
+        if item not in out:
+            out.append(item)
+    return out
+
 def shape(value):
     if is_atom(value):
         return []

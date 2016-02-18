@@ -126,6 +126,13 @@ def parse(matrix):
                 item = Item(ItemType.data, input_value)
                 items[(x,y)] = item
                 x += 1
+            elif char == 'I':
+                # Parse raw string input
+                input_string = input()
+                input_value = [to_char_value(char) for char in input_string]
+                item = Item(ItemType.data, input_value)
+                items[(x,y)] = item
+                x += 1
             elif char in func_defs:
                 # Parse a function
                 item = Item(ItemType.function, func_defs[char])
