@@ -33,6 +33,8 @@ Characters are surrounded in single quotes `'`, and strings in double quotes `"`
 Arrays are wrapped in `[]`, and their items are separated by spaces when necessary.
 The arrays can be nested in an arbitrary way, and strings are simply arrays of characters.
 
+If a program is preceded by an empty line, matrix-form printing is used instead, and a single space on the first line suppresses automatic printing.
+
 ## Vocabulary
 
 ### Control characters

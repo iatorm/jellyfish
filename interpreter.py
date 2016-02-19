@@ -18,14 +18,21 @@ class ItemType(Enum):
 class Item:
     "An item in the matrix"
     
-    def __init__(self, type, content, filled=False):
+    def __init__(self, type, content, filled=False, evald=False):
         self.type = type
         self.content = content
         self.filled = filled
+        self.evald = evald
         self.value = None
         self.func = None
         self.l_arg = None
         self.r_arg = None
+
+    def evaluate(self):
+        if self.type in [ItemType.function, ItemType.operator] and not self.evald:
+            self.value = self.func(self.l_arg, self.r_arg)
+            self.evald = True
+        return self.value
 
 class Connection:
     "A connection to an item, possibly blocking some fields."
@@ -172,19 +179,18 @@ def fill(items, pos=(0,0), level=0):
         r_nbor = fill(items, r_conn.pos, level+1)
         if item.type == ItemType.function:
             item.func = item.content
-            item.l_arg = l_nbor.value if l_conn.has_value else None
-            item.r_arg = r_nbor.value if r_conn.has_value else None
-            item.value = item.func(item.l_arg, item.r_arg)
+            item.l_arg = l_nbor.evaluate() if l_conn.has_value else None
+            item.r_arg = r_nbor.evaluate() if r_conn.has_value else None
         elif item.type == ItemType.operator:
             oper = item.content
             if l_conn.has_func and l_nbor.func is not None:
                 l_input = l_nbor.func
             else:
-                l_input = l_nbor.value if l_conn.has_value else None
+                l_input = l_nbor.evaluate() if l_conn.has_value else None
             if r_conn.has_func and r_nbor.func is not None:
                 r_input = r_nbor.func
             else:
-                r_input = r_nbor.value if r_conn.has_value else None
+                r_input = r_nbor.evaluate() if r_conn.has_value else None
             item.func = oper(l_input, r_input)
             r_l_arg = r_nbor.l_arg if r_conn.has_args else None
             r_r_arg = r_nbor.r_arg if r_conn.has_args else None
@@ -193,11 +199,11 @@ def fill(items, pos=(0,0), level=0):
                 item.r_arg = l_nbor.r_arg if l_conn.has_args else None
             else:
                 item.l_arg, item.r_arg = r_l_arg, r_r_arg
-            item.value = item.func(item.l_arg, item.r_arg)
+    item.filled = True
     return item
 
 def interpret(matrix):
     "Interpret a program, returning the top left value."
     items = parse(matrix)
     corner = fill(items)
-    return corner.value
+    return corner.evaluate()
