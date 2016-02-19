@@ -62,6 +62,32 @@ def uniques(array):
             out.append(item)
     return out
 
+def prefixes(a):
+    if is_atom(a):
+        a = func_unary_range(a)
+    return [a[:i] for i in range(1, len(a)+1)]
+
+def infixes(a, b):
+    if is_atom(a):
+        a = func_unary_range(a)
+    if is_atom(b):
+        b = [b]
+    if b:
+        n = int(b[0])
+        if n > 0:
+            return [infixes(a[i:i+n], b[1:])
+                    for i in range(len(a)-n+1)]
+        elif n < 0:
+            n = -n
+            return [infixes(a[i*n:(i+1)*n], b[1:])
+                    for i in range((len(a)+n-1)//n)]
+        else:
+            return [infixes(a[i:i+j+1], b[1:])
+                    for j in range(len(a)+1)
+                    for i in range(len(a)-j)]
+    else:
+        return a
+
 def shape(value):
     if is_atom(value):
         return []
@@ -161,3 +187,24 @@ def bin_range(x):
         return [[y] + w
                 for y in bin_range(x[0])
                 for w in bin_range(x[1:])]
+
+def iterate(f, a, n):
+    for i in range(n):
+        a = f(a)
+    return a
+
+def iterate_until(f, a, g):
+    while True:
+        b = f(a)
+        if is_truthy(g(a, b)):
+            return b
+        a = b
+
+def acc_iterate_until(f, a, g):
+    out = [a]
+    while True:
+        b = f(a)
+        out.append(b)
+        if is_truthy(g(a, b)):
+            return out
+        a = b

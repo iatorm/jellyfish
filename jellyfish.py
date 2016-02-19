@@ -1,4 +1,5 @@
-from interpreter import interpret, prettyprint, matrix_print
+from interpreter import interpret
+from print_parse import prettyprint, matrix_print
 import sys
 
 with open(sys.argv[1], 'r') as file:

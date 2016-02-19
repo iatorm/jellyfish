@@ -1,4 +1,5 @@
 from utils import *
+from print_parse import *
 import math
 import itertools
 from enum import Enum
@@ -57,6 +58,40 @@ def func_right_id(a):
 @defun_binary('}')
 def func_right(a, b):
     return b
+
+@defun_unary('j')
+def func_input(a):
+    return parse_value(input())[0]
+
+@defun_binary('j')
+def func_binary_input(a, b):
+    raise Exception("Binary 'j' not implemented.")
+
+@defun_unary('J')
+def func_raw_input(a):
+    return input()
+
+@defun_binary('J')
+def func_binary_raw_input(a, b):
+    raise Exception("Binary 'J' not implemented.")
+
+@defun_unary('p')
+def func_print(a):
+    print(prettyprint(a))
+    return a
+
+@defun_binary('p')
+def func_binary_print(a, b):
+    raise Exception("Binary 'p' not implemented.")
+
+@defun_unary('P')
+def func_matrix_print(a):
+    print(matrix_print(a))
+    return a
+
+@defun_binary('P')
+def func_binary_matrix_print(a, b):
+    raise Exception("Binary 'P' not implemented.")
 
 @defun_unary('+')
 @threaded_unary(0)
@@ -236,6 +271,7 @@ def func_combinations(a, b):
         y = b.value
         return math.factorial(a) / math.factorial(b) / math.factorial(a - b)
     else:
+        x = x % len(b)
         return [list(c) for c in itertools.combinations(b, x)]
 
 @defun_unary('n')
@@ -559,8 +595,29 @@ def oper_choice(f, g):
     elif is_value(g):
         return variadize(lambda a: f(g) if is_truthy(a) else g,
                          lambda a, b: f(b) if is_truthy(a) else g)
-    return variadize(lambda a: [f(a)] + g(a) if is_atom(a) else [f(a[0])] + g(a[1:]),
+    return variadize(lambda a: g(a) if is_truthy(f(a)) else a,
                      lambda a, b: f(b) if is_truthy(a) else g(b))
+
+@defop_unary('\\')
+def oper_substrings(f):
+    if is_value(f):
+        return variadize(lambda a: thread_unary(lambda b: infixes(a, int(b)), 0)(f),
+                         lambda a, b: thread_binary(lambda x, y: [s for n in func_binary_range(x, y) for s in infixes(a, n)], 0, 0)(b, f))
+    return variadize(lambda a: [f(p) for p in prefixes(a)],
+                     threaded_binary(lambda a, b: [f(p) for p in infixes(a, b)], -1, 1))
+
+@defop_binary('\\')
+def oper_iterate(f, g):
+    if is_value(f):
+        if is_value(g):
+            raise Exception("Binary '\\' on values not implemented.")
+        return variadize(lambda a: acc_iterate_until(g, a, lambda x, y: y == f),
+                         lambda a, b: acc_iterate_until(lambda x: g(a, x), b, lambda x, y: y == f))
+    if is_value(g):
+        return variadize(lambda a: thread_unary(lambda n: iterate(f, a, int(n)), 0)(g),
+                         lambda a, b: thread_unary(lambda n: iterate(lambda x: f(a, x), b, int(n)), 0)(g))
+    return variadize(lambda a: iterate_until(f, a, g),
+                     lambda a, b: iterate_until(lambda x: f(a, x), b, g))
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}

@@ -59,6 +59,8 @@ This is generalized to binary functions too, but it's more complicated.
 
 - `{` returns its left argument.
 - `}` returns its right argument.
+- Unary `j` and `J` ignore their arguments and read lines from STDIN. `j` parses the line, `J` returns it as a string.
+- Unary `p` and `P` return their arguments and print them to STDOUT. `p` uses the input format, `P` the matrix format.
 - Unary `+` is absolute value, binary is addition (threaded to level 0).
 - Unary `-` is negation, binary is subtraction (threaded to level 0).
 - Unary `*` is signum, binary is multiplication (threaded to level 0).
@@ -96,4 +98,6 @@ Not all input combinations are supported, and not all supported combinations are
 - Binary `` ` `` threads its function argument to the levels (unary, left, right) given by its value argument. If both inputs are functions, the level is dynamic and given by the left function.
 - Unary `/` on value `f` is join. It concatenates its argument `f` times. If two arguments are given, it intersperses the left argument into the right, and then concatenates `f` times.
 - Unary `/` on function is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
-- Binary `/` is a generalized "if", except the case of functions `f` and `g` and sole argument `a`, where `f` is applied to the head of `a` and `g` to the rest.
+- Binary `/` is a generalized "if".
+- Unary `\` applies the function to all prefixes, or substrings of given length. Given a value, it lists the substrings of that length. `0` means all substrings.
+- Binary `\` is iteration. Apply a function to argument given number of times, or until given value is found, or until a condition is met.
