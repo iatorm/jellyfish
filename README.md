@@ -11,5 +11,4 @@ The interpreter can be invoked by the command
     python jellyfish.py <source_file>
 
 Input is taken from STDIN, and output goes to STDOUT.
-If the source file begins with an empty line, the matrix-form pretty printer is used; otherwise, values are printed as nested arrays.
 The standard file extension for Jellyfish source files is `jf`, but this is not enforced by the interpreter.
