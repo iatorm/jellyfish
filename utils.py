@@ -74,13 +74,13 @@ def infixes(a, b):
         b = [b]
     if b:
         n = int(b[0])
-        if n => 0:
+        if n >= 0:
             return [infixes(a[i:i+n], b[1:])
                     for i in range(len(a)-n+1)]
         elif n < 0:
             n = -n
             return [infixes(a[i*n:(i+1)*n], b[1:])
-                    for i in range((len(a)+n-1)//n)]s
+                    for i in range((len(a)+n-1)//n)]
     else:
         return a
 

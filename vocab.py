@@ -264,7 +264,7 @@ def func_permutations(a):
     if is_atom(a):
         return Atom(a.type, math.factorial(a.value))
     else:
-        return [list(p) for itertools.permutations(a)]
+        return [list(p) for p in itertools.permutations(a)]
 
 @defun_unary('!')
 @threaded_binary(0, -1)
@@ -272,7 +272,7 @@ def func_binary_permutations(a, b):
     if is_atom(a):
         return Atom(a.type, math.factorial(a.value) / math.factorial(b.value))
     else:
-        return [list(p) for itertools.permutations(a, int(b))]
+        return [list(p) for p in itertools.permutations(a, int(b))]
 
 @defun_unary('c')
 @threaded_unary(0)
