@@ -98,6 +98,7 @@ Not all input combinations are supported, and not all supported combinations are
 - `[` and `]` are left and right forks: `g(f(a, b), b)` and `f(a, g(a, b))` on input functions `f g` and argument values `a b`.
 - Unary `` ` `` threads its argument to level 0; values are converted to constant functions.
 - Binary `` ` `` threads its function argument to the levels (unary, left, right) given by its value argument. If both inputs are functions, the level is dynamic and given by the left function.
+- Binary `L` applies its right argument to the level indicated by the left argument, and returns the results in a flat list. The unary version defaults to level 0.
 - Unary `/` on value `f` is join. It concatenates its argument `f` times. If two arguments are given, it intersperses the left argument into the right, and then concatenates `f` times.
 - Unary `/` on function is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
 - Binary `/` is a generalized "if".
