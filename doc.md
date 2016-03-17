@@ -75,9 +75,11 @@ This is generalized to binary functions too, but it's more complicated.
 - Binary `=` is equality.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.
+- Unary `!` is factorial or permutations, binary is truncated factorial or sub-permutations (threaded to level 0 on the left).
 - Unary `c` is conversion to char (threaded to level 0), binary is combinations (threaded to level 0 on the left).
 - Unary `n` is conversion to num (threaded to level 0), binary is intersection.
 - Unary `u` is uniques, binary is union.
+- Unary `N` is negation, binary is list difference.
 - Unary `#` is length of array and length of base-10 representation of number, binary is repetition.
 - Unary `r` is range from 0, binary from left input to right. Arrays give multidimensional ranges.
 - Unary `,` is flatten, binary is concatenation.

@@ -259,6 +259,21 @@ def func_greater_than(a, b):
     else:
         return to_num_atom(int(a > b))
 
+@defun_unary('!')
+def func_permutations(a):
+    if is_atom(a):
+        return Atom(a.type, math.factorial(a.value))
+    else:
+        return [list(p) for itertools.permutations(a)]
+
+@defun_unary('!')
+@threaded_binary(0, -1)
+def func_binary_permutations(a, b):
+    if is_atom(a):
+        return Atom(a.type, math.factorial(a.value) / math.factorial(b.value))
+    else:
+        return [list(p) for itertools.permutations(a, int(b))]
+
 @defun_unary('c')
 @threaded_unary(0)
 def func_to_char(a): return Atom(AtomType.char, a.value)
@@ -269,7 +284,8 @@ def func_combinations(a, b):
     x = a.value
     if is_atom(b):
         y = b.value
-        return math.factorial(a) / math.factorial(b) / math.factorial(a - b)
+        z = math.factorial(x) / math.factorial(y) / math.factorial(x - y)
+        return Atom(a.type, z)
     else:
         x = x % len(b)
         return [list(c) for c in itertools.combinations(b, x)]
@@ -300,6 +316,21 @@ def func_union(a, b):
     if is_atom(b):
         b = [b]
     return a + [x for x in uniques(b) if x not in a]
+
+@defun_unary('N')
+def func_not(a):
+    if is_truthy(a):
+        return to_num_atom(0)
+    else:
+        return to_num_atom(1)
+
+@defun_binary('N')
+def func_without(a, b):
+    if is_atom(a):
+        a = [a]
+    if is_atom(b):
+        b = [b]
+    return [x for x in a if x not in b]
 
 @defun_unary('#')
 def func_len(a):
