@@ -75,7 +75,8 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.
 - Unary `!` is factorial or permutations, binary is truncated factorial or sub-permutations (threaded to level 0 on the left).
-- Unary `c` is conversion to char (threaded to level 0), binary is combinations (threaded to level 0 on the left).
+- Unary `c` is conversion to char (threaded to level 0), binary is subset check with mltiplicities.
+- Unary `S` is power-of-two or subsequences, binary is binomial coefficient or combinations (threaded to level 0 on the left).
 - Unary `n` is conversion to num (threaded to level 0), binary is intersection.
 - Unary `u` is uniques, binary is union.
 - Unary `N` is negation, binary is list difference.
@@ -94,7 +95,7 @@ Not all input combinations are supported, and not all supported combinations are
 - Unary `~` on value gives a function that always returns that value, on function flips its arguments.
 - Binary `~` on two values gives a function that always returns their pair, on function+value fixes the respective input (currying), on two functions gives their composition (using binary form of left function).
 - Unary `&` swaps the arity of a function.
-- Binary `&` gives composition of functions, using binary form of right function.
+- Binary `&` on function+value curries the value from both sides, on two functions gives composition of functions (using binary form of right function).
 - `(` and `)` are left and right hooks: `g(f(a), b)` and `f(a, g(b))` on input functions `f g` and argument values `a b`.
 - `[` and `]` are left and right forks: `g(f(a, b), b)` and `f(a, g(a, b))` on input functions `f g` and argument values `a b`.
 - Unary `` ` `` threads its argument to level 0; values are converted to constant functions.

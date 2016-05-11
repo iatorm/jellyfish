@@ -279,6 +279,23 @@ def func_binary_permutations(a, b):
 def func_to_char(a): return Atom(AtomType.char, a.value)
 
 @defun_binary('c')
+def func_is_subset(a, b):
+    if is_atom(a):
+        a = [a]
+    if is_atom(b):
+        b = [b]
+    return all(a.count(x) <= b.count(x) for x in uniques(a))
+
+@defun_unary('S')
+def func_subsequences(a):
+    if is_atom(a):
+        return Atom(a.type, 2**a.value)
+    else:
+        return [list(s)
+                for i in range(len(a)+1)
+                for s in itertools.combinations(a, i)]
+
+@defun_binary('S')
 @threaded_binary(0, -1)
 def func_combinations(a, b):
     x = a.value
@@ -487,7 +504,19 @@ def oper_swap_arity(f):
                      lambda a, b: f(b))
 
 @defop_binary('&')
-def oper_postcompose(f, g):
+def oper_twosided_curry_or_postcompose(f, g):
+    if is_value(f):
+        if is_value(g):
+            raise Exception("Binary '&' on values not implemented.")
+        def two_sided(a):
+            return g(f, g(a, f))
+        return variadize(two_sided,
+                         lambda a, b: iterate(two_sided, b, int(a)))
+    elif is_value(g):
+        def two_sided(a):
+            return f(f(g, a), g)
+        return variadize(two_sided,
+                         lambda a, b: iterate(two_sided, b, int(a)))
     return variadize(lambda a: f(g(a)),
                      lambda a, b: f(g(a, b)))
 
