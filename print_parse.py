@@ -1,4 +1,5 @@
 from utils import *
+import re
 
 def prettyprint(value, quotes=True):
     "Convert a value into a human-readable string."
@@ -53,11 +54,41 @@ def matrix_print_aux(value, level, pads, quotes):
 def parse_value(string):
     digits = "0123456789"
     string = string.lstrip()
-    if string[0] in '-.' + digits:
-        j = 1
-        while j < len(string) and string[j] in '.e' + digits:
+    if string[0] in '-.e' + digits:
+        neg = string[0] == '-'
+        j = j0 = 1 if neg else 0
+        while j < len(string) and string[j] in digits:
             j += 1
-        return to_num_atom(eval(string[:j])), string[j:]
+        if j < len(string) and string[j] == '.':
+            dec = True
+            j += 1
+            while j < len(string) and string[j] in digits:
+                j += 1
+        else:
+            dec = False
+        j1 = j
+        if string[j] == 'e':
+            exp = True
+            j += 1
+            neg_exp = j < len(string) and string[j] == '-'
+            j = j2 = j+1 if neg_exp else j
+            while j < len(string) and string[j] in digits:
+                j += 1
+            if j < len(string) and string[j] == '.':
+                dec_exp = True
+                j += 1
+                while j < len(string) and string[j] in digits:
+                    j += 1
+            else:
+                dec_exp = False
+        else:
+            exp = False
+        multiplier = (-1 if neg else 1) * (float if dec else int)(string[j0:j1])
+        if exp:
+            exponent = (-1 if neg_exp else 1) * (float if dec_exp else int)(string[j2:j])
+        else:
+            exponent = 0
+        return to_num_atom(multiplier * 10**exponent), string[j:]
     elif string[0] == "'":
         if string[1] == '\\' and string[3] == "'":
             char = string[2]
