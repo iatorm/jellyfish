@@ -67,7 +67,7 @@ def parse_value(string):
         else:
             dec = False
         j1 = j
-        if string[j] == 'e':
+        if j < len(string) and string[j] == 'e':
             exp = True
             j += 1
             neg_exp = j < len(string) and string[j] == '-'
