@@ -303,9 +303,11 @@ def func_combinations(a, b):
         y = b.value
         z = math.factorial(x) / math.factorial(y) / math.factorial(x - y)
         return Atom(a.type, z)
-    else:
+    elif b:
         x = x % len(b)
         return [list(c) for c in itertools.combinations(b, x)]
+    else:
+        return []
 
 @defun_unary('n')
 @threaded_unary(0)
