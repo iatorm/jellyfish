@@ -301,6 +301,8 @@ def func_combinations(a, b):
     x = a.value
     if is_atom(b):
         y = b.value
+        if y > x:
+            return Atom(a.type, 0)
         z = math.factorial(x) / math.factorial(y) / math.factorial(x - y)
         return Atom(a.type, z)
     elif b:
@@ -483,8 +485,8 @@ def oper_const_or_flip(f):
     if is_value(f):
         return variadize(lambda a: f,
                          lambda a, b: f)
-    return variadize(lambda a: func(a),
-                     lambda a, b: func(b, a))
+    return variadize(lambda a: f(a),
+                     lambda a, b: f(b, a))
 
 @defop_binary('~')
 def oper_curry_or_precompose(f, g):
