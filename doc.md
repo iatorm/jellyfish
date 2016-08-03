@@ -45,7 +45,7 @@ The following characters control the parsing process, mostly the way functions a
 - `F` blocks all functions. An operator can still take an input through this character, but instead of a function, its output value will be considered.
 - `A` blocks all arguments. An operator will not be evaluated on the arguments of an input obtained through it.
 - `E` turns a southward argument-seeking process to the east.
-- `S` turns an eastward ergument-seeking process to the south.
+- `S` turns an eastward argument-seeking process to the south.
 - `X` is a combination of `E` and `S`.
 
 ### Functions
@@ -75,8 +75,8 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.
 - Unary `!` is factorial or permutations, binary is truncated factorial or sub-permutations (threaded to level 0 on the left).
-- Unary `c` is conversion to char (threaded to level 0), binary is subset check with mltiplicities.
-- Unary `S` is power-of-two or subsequences, binary is binomial coefficient or combinations (threaded to level 0 on the left).
+- Unary `c` is conversion to char (threaded to level 0), binary is subset check with multiplicities.
+- Unary `C` is power-of-two or subsequences, binary is binomial coefficient or combinations (threaded to level 0 on the left).
 - Unary `n` is conversion to num (threaded to level 0), binary is intersection.
 - Unary `u` is uniques, binary is union.
 - Unary `N` is negation, binary is list difference.

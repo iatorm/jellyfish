@@ -266,7 +266,7 @@ def func_permutations(a):
     else:
         return [list(p) for p in itertools.permutations(a)]
 
-@defun_unary('!')
+@defun_binary('!')
 @threaded_binary(0, -1)
 def func_binary_permutations(a, b):
     if is_atom(a):
@@ -286,7 +286,7 @@ def func_is_subset(a, b):
         b = [b]
     return all(a.count(x) <= b.count(x) for x in uniques(a))
 
-@defun_unary('S')
+@defun_unary('C')
 def func_subsequences(a):
     if is_atom(a):
         return Atom(a.type, 2**a.value)
@@ -295,7 +295,7 @@ def func_subsequences(a):
                 for i in range(len(a)+1)
                 for s in itertools.combinations(a, i)]
 
-@defun_binary('S')
+@defun_binary('C')
 @threaded_binary(0, -1)
 def func_combinations(a, b):
     x = a.value
