@@ -64,12 +64,12 @@ def uniques(array):
 
 def prefixes(a):
     if is_atom(a):
-        a = func_unary_range(a)
+        a = un_range(a)
     return [a[:i] for i in range(1, len(a)+1)]
 
 def infixes(a, b):
     if is_atom(a):
-        a = func_unary_range(a)
+        a = un_range(a)
     if is_atom(b):
         b = [b]
     if b:
@@ -170,15 +170,29 @@ def thread_binary(f, height1, height2):
 def thread_unary(f, height):
     return lambda a: thread_binary(lambda x, y: f(x), height, -1)(a, None)
 
+def un_range(x):
+    if is_atom(x):
+        end = int(x.value)
+        if end >= 0:
+            return [Atom(x.type, n) for n in range(end)]
+        else:
+            return [Atom(x.type, -n) for n in reversed(range(-end))]
+    elif x:
+        return [[n] + w
+                for n in un_range(x[0])
+                for w in un_range(x[1:])]
+    else:
+        return [[]]
+
 def bin_range(x):
     if not x:
         return [[]]
     elif height(x) == 1:
-        lo, hi = map(lambda y: int(y.value), x)
+        (lo_type, lo), (hi_type, hi) = map(lambda y: (y.type, int(y.value)), x)
         if lo <= hi:
-            return [to_num_atom(y) for y in range(lo, hi)]
+            return [Atom(lo_type, y) for y in range(lo, hi)]
         else:
-            return [to_num_atom(y) for y in reversed(range(hi, lo))]
+            return [Atom(lo_type, y) for y in reversed(range(hi, lo))]
     else:
         return [[y] + w
                 for y in bin_range(x[0])

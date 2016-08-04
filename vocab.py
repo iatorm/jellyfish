@@ -372,18 +372,7 @@ def func_repeat(a, b):
 
 @defun_unary('r')
 def func_unary_range(a):
-    if is_atom(a):
-        end = int(a.value)
-        if end >= 0:
-            return [to_num_atom(x) for x in range(end)]
-        else:
-            return [to_num_atom(-x) for x in reversed(range(-end))]
-    elif a:
-        return [[x] + w
-                for x in func_range(a[0])
-                for w in func_range(a[1:])]
-    else:
-        return [[]]
+    return un_range(a)
 
 @defun_binary('r')
 def func_binary_range(a, b):
