@@ -67,22 +67,16 @@ def prefixes(a):
         a = un_range(a)
     return [a[:i] for i in range(1, len(a)+1)]
 
-def infixes(a, b):
+def infixes(a, n):
     if is_atom(a):
         a = un_range(a)
-    if is_atom(b):
-        b = [b]
-    if b:
-        n = int(b[0])
-        if n >= 0:
-            return [infixes(a[i:i+n], b[1:])
-                    for i in range(len(a)-n+1)]
-        elif n < 0:
-            n = -n
-            return [infixes(a[i*n:(i+1)*n], b[1:])
-                    for i in range((len(a)+n-1)//n)]
+    if n > 0:
+        return [a[i:i+n] for i in range(len(a)-n+1)]
+    elif n < 0:
+        n = -n
+        return [a[i*n:(i+1)*n] for i in range((len(a)+n-1)//n)]
     else:
-        return a
+        return [a[i:i+k] for k in reversed(range(1,len(a)+1)) for i in range(len(a)-k+1)]
 
 def shape(value):
     if is_atom(value):

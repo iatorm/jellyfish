@@ -104,5 +104,5 @@ Not all input combinations are supported, and not all supported combinations are
 - Unary `/` on value `f` is join. It concatenates its argument `f` times. If two arguments are given, it intersperses the left argument into the right, and then concatenates `f` times.
 - Unary `/` on function is fold (aka reduce) from the left. If two arguments are given to the resulting function, the left is used as the initial value.
 - Binary `/` is a generalized "if".
-- Unary `\` applies the function to all prefixes, or substrings of given length. Given a value, it lists the substrings of that length. `0` means all substrings.
+- Unary `\` applies the function to all prefixes, or substrings of given length. Given a value, it lists the substrings of that length. `0` means all substrings. With two arguments, it lists the substrings of all lengths from the operator argument to the second function argument.
 - Binary `\` is iteration. Apply a function to argument given number of times, or until given value is found, or until a condition is met.
