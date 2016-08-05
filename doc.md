@@ -91,7 +91,7 @@ This is generalized to binary functions too, but it's more complicated.
 
 Not all input combinations are supported, and not all supported combinations are fully documented here.
 
-- `_` returns its left function argument. Its main purpose is to give arguments to operators that only take values.
+- Binary `_`, if given two functions, returns the left (southern) one. Its main purpose is to give arguments to operators that only take values. If given a function and a value, the resulting function ignores its own arguments and returns the function applied to the value.
 - Unary `~` on value gives a function that always returns that value, on function flips its arguments.
 - Binary `~` on two values gives a function that always returns their pair, on function+value fixes the respective input (currying), on two functions gives their composition (using binary form of left function).
 - Unary `&` swaps the arity of a function.

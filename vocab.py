@@ -466,7 +466,9 @@ def oper_left(f, g):
     if is_value(f):
         if is_value(g):
             raise Exception("Binary '_' on values not implemented.")
-        return g
+        return oper_const_or_flip(g(f))
+    if is_value(g):
+        return oper_const_or_flip(f(g))
     return f
 
 @defop_unary('~')
