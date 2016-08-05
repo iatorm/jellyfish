@@ -71,6 +71,7 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `M` is ceiling (threaded to level 0), binary is maximum.
 - Unary `x` is Cartesian product, binary is XOR (threaded to level 0).
 - Unary `b` is conversion to base 2, binary to given base (threaded to levels 1 on the left and 0 on the right).
+- Unary `d` is conversion from base 2, binary from given base (threaded to level 1 on both sides).
 - Binary `=` is equality.
 - Unary `<` is decrementation and head of array, binary is less-than.
 - Unary `>` is incrementation and tail of array, binary is greater-than.

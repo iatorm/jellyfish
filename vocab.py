@@ -210,6 +210,25 @@ def func_base(a, b):
                 num /= base
         return digits
 
+@defun_unary('d')
+def func_antibase2(a):
+    return func_antibase(to_num_atom(2), a)
+
+@defun_binary('d')
+@threaded_binary(1, 1)
+def func_antibase(a, b):
+    if is_atom(b):
+        return b
+    if is_atom(a):
+        a = [a]*len(b)
+    total = 0
+    old_base = 1
+    for base, n in reversed(list(zip(a, b))):
+        total += n.value * old_base
+        old_base *= base.value
+    return to_num_atom(total)
+        
+
 @defun_unary('=')
 def func_unary_eq(a):
     raise Exception("Unary '=' not implemented.")
