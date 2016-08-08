@@ -687,8 +687,8 @@ def oper_iterate(f, g):
     if is_value(f):
         if is_value(g):
             raise Exception("Binary '\\' on values not implemented.")
-        return variadize(lambda a: acc_iterate_until(g, a, lambda x, y: y == f),
-                         lambda a, b: acc_iterate_until(lambda x: g(a, x), b, lambda x, y: y == f))
+        return variadize(lambda a: acc_iterate_until(g, a, lambda x, y: func_equals(y, f)),
+                         lambda a, b: acc_iterate_until(lambda x: g(a, x), b, lambda x, y: func_equals(y, f)))
     if is_value(g):
         return variadize(lambda a: thread_unary(lambda n: iterate(f, a, int(n)), 0)(g),
                          lambda a, b: thread_unary(lambda n: iterate(lambda x: f(a, x), b, int(n)), 0)(g))
