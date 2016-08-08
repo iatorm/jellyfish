@@ -178,9 +178,9 @@ def func_cart_product(a):
         return list(cartesian_product(a))
 
 @defun_binary('x')
-@threaded_binary(0,0)
+@threaded_binary(0, 0)
 @mathy_binary
-def func_xor(a, b): a ^ b
+def func_xor(a, b): return a ^ b
 
 @defun_unary('b')
 def func_base2(a):
