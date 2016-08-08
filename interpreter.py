@@ -50,7 +50,7 @@ def find_item(items, max_x, max_y, x, y, direction):
         if (x,y) in items:
             item = items[(x,y)]
             if item.type == ItemType.data:
-                return Connection((x,y), has_value, False, False)
+                return Connection((x,y), has_value, False, has_args)
             elif item.type == ItemType.function or item.type == ItemType.operator:
                 return Connection((x,y), has_value, has_func, has_args)
             elif item.type == ItemType.control:
@@ -174,6 +174,7 @@ def fill(items, pos=(0,0), level=0):
         return item
     if item.type == ItemType.data:
         item.value = item.content
+        item.r_arg = item.content
     else:
         l_nbor = fill(items, l_conn.pos, level+1)
         r_nbor = fill(items, r_conn.pos, level+1)

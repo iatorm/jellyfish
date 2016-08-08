@@ -23,6 +23,7 @@ A function on the grid takes as its inputs the nearest values to its south and e
 An operator also takes its inputs from the south and east, but they are functions instead of values.
 Only if a value is encountered instead of a function, it is used as the input to an operator.
 The operator evaluates its argument(s) and produces a new function, and this function is evaluated on the argument(s) of its east input (or, if the east input has no arguments, its south input).
+Every value (a literal or input value) on the grid is counted as having one argument, namely itself.
 A program is run by evaluating the top left item, and all other items required for that, in an unspecified order (except that function calls are always evaluated after their arguments).
 Unnecessary function calls are not evaluated, even when the function and its arguments are used in an operator call.
 
