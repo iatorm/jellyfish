@@ -136,6 +136,8 @@ def func_reciprocal(a):
 @mathy_binary
 def func_divide(a, b):
     if a != 0 != b:
+        if type(a) == int == type(b) and b % a == 0:
+            return b // a
         return b / a
     return 0 # TODO: give errors?
 
