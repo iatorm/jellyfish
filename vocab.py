@@ -579,7 +579,7 @@ def oper_right_fork(f, g):
 @defop_unary('`')
 def oper_unary_thread(f):
     if is_value(f):
-        return variazide(thread_unary(lambda a: f, 0),
+        return variadize(thread_unary(lambda a: f, 0),
                          thread_binary(lambda a, b: f, 0, 0))
     return variadize(thread_unary(f, 0),
                      thread_binary(f, 0, 0))
@@ -664,7 +664,7 @@ def oper_join_or_fold(f):
 def oper_choice(f, g):
     if is_value(f):
         if is_value(g):
-            return variazide(lambda a: f if is_truthy(a) else g,
+            return variadize(lambda a: f if is_truthy(a) else g,
                              lambda a, b: [f if is_truthy(a) else g, b])
         return variadize(lambda a: g(a) if is_truthy(f) else a,
                          lambda a, b: g(b) if is_truthy(f) else g(a))
