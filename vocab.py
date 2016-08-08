@@ -281,17 +281,17 @@ def func_greater_than(a, b):
 @defun_unary('!')
 def func_permutations(a):
     if is_atom(a):
-        return Atom(a.type, math.factorial(a.value))
+        return Atom(a.type, math.factorial(int(a.value)))
     else:
         return [list(p) for p in itertools.permutations(a)]
 
 @defun_binary('!')
 @threaded_binary(0, -1)
 def func_binary_permutations(a, b):
-    if is_atom(a):
-        return Atom(a.type, math.factorial(a.value) / math.factorial(b.value))
+    if is_atom(b):
+        return Atom(a.type, math.factorial(int(b.value)) // math.factorial(int(b.value - a.value)))
     else:
-        return [list(p) for p in itertools.permutations(a, int(b))]
+        return [list(p) for p in itertools.permutations(b, int(a))]
 
 @defun_unary('c')
 @threaded_unary(0)
@@ -320,9 +320,9 @@ def func_combinations(a, b):
     x = a.value
     if is_atom(b):
         y = b.value
-        if y > x:
+        if y < x:
             return Atom(a.type, 0)
-        z = math.factorial(x) / math.factorial(y) / math.factorial(x - y)
+        z = math.factorial(int(y)) // math.factorial(int(x)) // math.factorial(int(y - x))
         return Atom(a.type, z)
     elif b:
         x = x % len(b)
