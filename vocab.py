@@ -391,6 +391,30 @@ def func_repeat(a, b):
     else:
         return [y for (x,y) in zip(a,b) for _ in range(int(x))]
 
+@defun_unary('k')
+@threaded_unary(1)
+def func_mask_to_indices(a):
+    if is_atom(a):
+        return [to_num_atom(0)]*int(a.value)
+    else:
+        return [to_num_atom(i) for (i, x) in enumerate(a) for _ in range(int(x.value))]
+
+@defun_binary('k')
+def func_binary_k(a, b):
+    raise Error("Binary 'k' not implemented.")
+
+@defun_unary('K')
+@threaded_unary(1)
+def func_indices_to_mask(a):
+    if is_atom(a):
+        a = [a]
+    a = [int(n.value) for n in a]
+    return [to_num_atom(a.count(i)) for i in range(max(a) + 1)]
+
+@defun_binary('K')
+def func_binary_K(a, b):
+    raise Error("Binary 'K' not implemented.")
+
 @defun_unary('r')
 def func_unary_range(a):
     return un_range(a)

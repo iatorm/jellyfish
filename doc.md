@@ -83,6 +83,8 @@ This is generalized to binary functions too, but it's more complicated.
 - Unary `u` is uniques, binary is union.
 - Unary `N` is negation, binary is list difference.
 - Unary `#` is length of array and length of base-10 representation of number, binary is repetition.
+- Unary `k` converts from bitmasks to lists of indices (threaded to level 1).
+- Unary `K` converts from lists of indices to bitmasks (threaded to level 1).
 - Unary `r` is range from 0, binary from left input to right. Arrays give multidimensional ranges.
 - Unary `,` is flatten, binary is concatenation.
 - Unary `;` wraps into a singleton array, binary gives a pair.
