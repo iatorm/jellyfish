@@ -678,9 +678,9 @@ def oper_choice(f, g):
 def oper_substrings(f):
     if is_value(f):
         return variadize(lambda a: thread_unary(lambda b: infixes(a, int(b)), 0)(f),
-                         lambda a, b: thread_binary(lambda x, y: [s for n in func_binary_range(x, y) for s in infixes(a, int(n))], 0, 0)(b, f))
+                         lambda a, b: thread_binary(lambda u, v: u[int(v.value) % 2], -2, 0)(thread_binary(lambda x, y: [x, y], -2, -2)(a, b), f))
     return variadize(lambda a: [f(p) for p in prefixes(a)],
-                     thread_binary(lambda a, b: [f(p) for p in infixes(a, int(b))], -1, 0))
+                     thread_binary(lambda a, b: [f(p) for p in infixes(b, int(a))], 0, -1))
 
 @defop_binary('\\')
 def oper_iterate(f, g):
