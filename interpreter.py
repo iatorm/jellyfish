@@ -136,7 +136,7 @@ def parse(matrix):
             elif char == 'I':
                 # Parse raw string input
                 input_string = input()
-                input_value = [to_char_value(char) for char in input_string]
+                input_value = [to_char_atom(char) for char in input_string]
                 item = Item(ItemType.data, input_value)
                 items[(x,y)] = item
                 x += 1
