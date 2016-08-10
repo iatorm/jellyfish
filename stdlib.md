@@ -40,8 +40,8 @@ Level -1 means no threading.
 <tr> <td> <code>u</code> </td> <td>  0, -1, -1 </td> <td> <b>uniques(a)</b> </td> <td> Union of <b>a</b> and <b>b</b> </td> </tr>
 <tr> <td> <code>N</code> </td> <td> -1, -1, -1 </td> <td> <b>0</b> if <b>a</b> is truthy, otherwise <b>1</b> </td> <td> List difference of <b>a</b> and <b>b</b> </td> </tr>
 <tr> <td> <code>#</code> </td> <td> -1,  1, -1 </td> <td> <ul> <li> Atom: number of base-10 digits in <b>a</b> </li> <li> Array: length of <b>a</b> </li> </ul> </td> <td> Each item of <b>b</b> repeated by the corresponding item of <b>a</b> </td> </tr>
-<tr> <td> <code>k</code> </td> <td>  1,  -,  - </td> <td> <ul> Convert bitmask <b>a</b> to list of indices </td> <td> <b>NI</b> </td> </tr>
-<tr> <td> <code>K</code> </td> <td>  1,  -,  - </td> <td> <ul> Convert list of indices <b>a</b> to bitmask </td> <td> <b>NI</b> </td> </tr>
+<tr> <td> <code>k</code> </td> <td>  1,  -,  - </td> <td> Convert bitmask <b>a</b> to list of indices </td> <td> <b>NI</b> </td> </tr>
+<tr> <td> <code>K</code> </td> <td>  1,  -,  - </td> <td> Convert list of indices <b>a</b> to bitmask </td> <td> <b>NI</b> </td> </tr>
 <tr> <td> <code>r</code> </td> <td> -1, -1, -1 </td> <td> Range from <b>0</b> to <b>a-1</b>, or from <b>a+1</b> to <b>0</b>, separately for each item </td> <td> Range from <b>a</b> to <b>b-1</b>, separately for each item </td> </tr>
 <tr> <td> <code>,</code> </td> <td> -1, -1, -1 </td> <td> <b>flatten(a)</b> </td> <td> <b>concatenate(a, b)</b> </td> </tr>
 <tr> <td> <code>;</code> </td> <td> -1, -1, -1 </td> <td> <b>[a]</b> </td> <td> <b>[a, b]</b> </td> </tr>
