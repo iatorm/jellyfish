@@ -33,9 +33,9 @@ Level -1 means no threading.
 <tr> <td> <code>=</code> </td> <td>  -, -1, -1 </td> <td> <b>NI</b> </td> <td> <b>1</b> if <b>a = b</b>, otherwise <b>0</b> </td> </tr>
 <tr> <td> <code>&lt;</code> </td> <td> -1, -1, -1 </td> <td> <ul> <li> Atom: <b>a - 1</b> </li> <li> Array: <b>head(a)</b> </li> </ul> </td> <td> <b>1</b> if <b>a &lt; b</b>, otherwise <b>0</b> </td> </tr>
 <tr> <td> <code>&lt;</code> </td> <td> -1, -1, -1 </td> <td> <ul> <li> Atom: <b>a + 1</b> </li> <li> Array: <b>tail(a)</b> </li> </ul> </td> <td> <b>1</b> if <b>a &gt; b</b>, otherwise <b>0</b> </td> </tr>
-<tr> <td> <code>!</code> </td> <td> -1,  0, -1 </td> <td> <ul> <li> Atom: <b>a!</b> </li> <li> Array: permutations of <b>a</b> </li> </ul> </td> <td> <li> Atom <b>b</b>: <b>b! / (b-a)!</b> </li> <li> Array <b>b</b>: length-<b>a</b> permutations of <b>b</b> </li> </td> </tr>
+<tr> <td> <code>!</code> </td> <td> -1,  0, -1 </td> <td> <ul> <li> Atom: <b>a!</b> </li> <li> Array: permutations of <b>a</b> </li> </ul> </td> <td> <ul> <li> Atom <b>b</b>: <b>b! / (b-a)!</b> </li> <li> Array <b>b</b>: length-<b>a</b> permutations of <b>b</b> </li> </ul> </td> </tr>
 <tr> <td> <code>c</code> </td> <td>  0, -1, -1 </td> <td> <b>char(a)</b> </td> <td> <b>1</b> if <b>a</b> is a sub-multiset of <b>b</b>, otherwise <b>0</b> </td> </tr>
-<tr> <td> <code>!</code> </td> <td> -1,  0, -1 </td> <td> <ul> <li> Atom: <b>2<sup>a</sup></b> </li> <li> Array: subsequences of <b>a</b> </li> </ul> </td> <td> <li> Atom <b>b</b>: <b>b! / a!*(b-a)!</b> </li> <li> Array <b>b</b>: length-<b>a</b> subsequences of <b>b</b> </li> </td> </tr>
+<tr> <td> <code>!</code> </td> <td> -1,  0, -1 </td> <td> <ul> <li> Atom: <b>2<sup>a</sup></b> </li> <li> Array: subsequences of <b>a</b> </li> </ul> </td> <td> <ul> <li> Atom <b>b</b>: <b>b! / a!*(b-a)!</b> </li> <li> Array <b>b</b>: length-<b>a</b> subsequences of <b>b</b> </li> </ul> </td> </tr>
 <tr> <td> <code>n</code> </td> <td>  0, -1, -1 </td> <td> <b>num(a)</b> </td> <td> Intersection of <b>a</b> and <b>b</b> </td> </tr>
 <tr> <td> <code>u</code> </td> <td>  0, -1, -1 </td> <td> <b>uniques(a)</b> </td> <td> Union of <b>a</b> and <b>b</b> </td> </tr>
 <tr> <td> <code>N</code> </td> <td> -1, -1, -1 </td> <td> <b>0</b> if <b>a</b> is truthy, otherwise <b>1</b> </td> <td> List difference of <b>a</b> and <b>b</b> </td> </tr>
