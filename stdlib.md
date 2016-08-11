@@ -71,6 +71,10 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | **a** (list)               | -1        | Length of **a** |
 |        | **a** (atom), **b'** (list)| -1, -1    | Each item of **b** repeated **a** times |
 |        | **a** (list), **b'** (list)| -1, -1    | Each item of **b** repeated by the corresponding item of **a** |
+| `R`    | **a** (atom)               | -1        | **a** |
+|        | **a** (list)               | -1        | **a** reversed |
+|        | **a** (atom), **b** (atom) |  0, -1    | **b** |
+|        | **a** (atom), **b** (list) |  0, -1    | **b** rotated **a** steps to the left |
 | `k`    | **a'** (list)              |  1        | Convert bitmask **a** to list of indices |
 | `K`    | **a'** (list)              |  1        | Convert list of indices **a** to bitmask |
 | `r`    | **a** (atom)               | -1        | Range from **0** to **a-1** | From **a+1** to **0** if **a < 0** |

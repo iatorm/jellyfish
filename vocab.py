@@ -391,6 +391,22 @@ def func_repeat(a, b):
     else:
         return [y for (x,y) in zip(a,b) for _ in range(int(x))]
 
+@defun_unary('R')
+def func_reverse(a):
+    if is_atom(a):
+        return a
+    else:
+        return list(reversed(a))
+
+@defun_binary('R')
+@threaded_binary(0, -1)
+def func_rotate(a, b):
+    if is_atom(b) or not b:
+        return b
+    elif b:
+        a = int(a) % len(b)
+        return b[a:] + b[:a]
+
 @defun_unary('k')
 @threaded_unary(1)
 def func_mask_to_indices(a):
@@ -721,6 +737,7 @@ def oper_iterate(f, g):
                          lambda a, b: thread_unary(lambda n: iterate(lambda x: f(a, x), b, int(n)), 0)(g))
     return variadize(lambda a: iterate_until(f, a, g),
                      lambda a, b: iterate_until(lambda x: f(a, x), b, g))
+
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}
