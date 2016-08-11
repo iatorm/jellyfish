@@ -489,7 +489,7 @@ def func_indices(a):
     return res
 
 @defun_binary('@')
-@threaded_binary(1, -1)
+@threaded_binary(-2, -1)
 def func_index(a, b):
     if is_atom(b):
         return b

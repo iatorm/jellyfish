@@ -87,7 +87,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 | `$`    | **a** (any)                | -1        | Shape vector of **a** |
 |        | **a'** (list), **b** (any) |  1, -1    | **b** reshaped according to shape vector **a** |
 | `@`    | **a** (any)                | -1        | Indices of all atoms in **a** |
-|        | **a'** (list), **b** (any) |  1, -1    | Item of **b** at (multidimensional) index **a** |
+|        | **a'** (list), **b** (any) | -2, -1    | Item of **b** at (multidimensional) index **a** |
 
 ## Operators
 
