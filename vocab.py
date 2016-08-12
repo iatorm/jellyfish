@@ -69,7 +69,7 @@ def func_binary_input(a, b):
 
 @defun_unary('J')
 def func_raw_input(a):
-    return input()
+    return [to_char_atom(c) for c in input()]
 
 @defun_binary('J')
 def func_binary_raw_input(a, b):
