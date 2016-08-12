@@ -495,7 +495,7 @@ def func_index(a, b):
         return b
     if is_atom(a):
         return b[int(a) % len(b)]
-    for ind in a:
+    for ind in flatten(a):
         b = b[int(ind) % len(b)]
         if is_atom(b):
             return b
