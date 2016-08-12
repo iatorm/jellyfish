@@ -35,7 +35,7 @@ class Atom:
         if self.type == AtomType.num:
             return "<{}>".format(self.value)
         else:
-            return "<'{}>".format(chr(abs(int(self.value))))
+            return "<{}>".format(repr(chr(abs(int(self.value)))))
 
 def to_num_atom(d):
     return Atom(AtomType.num, d)

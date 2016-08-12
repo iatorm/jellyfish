@@ -1,5 +1,6 @@
 from utils import *
 from print_parse import *
+import sys
 import math
 import itertools
 from enum import Enum
@@ -64,16 +65,22 @@ def func_input(a):
     return parse_value(input())[0]
 
 @defun_binary('j')
+@threaded_binary(0, -1)
 def func_binary_input(a, b):
-    raise Exception("Binary 'j' not implemented.")
+    if a.value > 0:
+        string = "".join(chr(abs(int(item.value))) for item in flatten(b))
+        return parse_value(string)[0]
+    else:
+        return [to_char_atom(c) for c in prettyprint(b)]
 
 @defun_unary('J')
 def func_raw_input(a):
     return [to_char_atom(c) for c in input()]
 
 @defun_binary('J')
+@threaded_binary(-1, 0)
 def func_binary_raw_input(a, b):
-    raise Exception("Binary 'J' not implemented.")
+    return [to_char_atom(c) for c in sys.stdin.read(int(b))]
 
 @defun_unary('p')
 def func_print(a):

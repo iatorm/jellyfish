@@ -21,7 +21,9 @@ A **'** after an argument means that atomic arguments are converted to singleton
 | `}`    | **a** (any)                | -1        | **a** |
 |        | **a** (any), **b** (any)   | -1, -1    | **b** |
 | `j`    | **a** (any)                | -1        | Read STDIN and eval |
+| `j`    | **a** (atom), **b** (any)  |  0, -1    | If **a > 0**, evaluate string **b**, otherwise convert **b** to string | If **a > 0**, a multidimensional **b** is flattened before conversion
 | `J`    | **a** (any)                | -1        | Read STDIN as string |
+| `J`    | **a** (any), **b** (atom)  | -1,  0    | Read **b** characters from STDIN | Stops if EOF is encountered, reads entire STDIN if **b < 0** |
 | `p`    | **a** (any)                | -1        | Print **a** to STDOUT, return **a** |
 | `P`    | **a** (any)                | -1        | Print **a** to STDOUT in matrix format, return **a** |
 | `+`    | **a** (atom)               |  0        | **abs(a)** |
