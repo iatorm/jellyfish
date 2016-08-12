@@ -55,6 +55,12 @@ def is_truthy(value):
     else:
         return value != []
 
+def full_copy(value):
+    if is_atom(value):
+        return value
+    else:
+        return [full_copy(item) for item in value]
+
 def uniques(array):
     out = []
     for item in array:

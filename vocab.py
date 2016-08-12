@@ -738,6 +738,44 @@ def oper_iterate(f, g):
     return variadize(lambda a: iterate_until(f, a, g),
                      lambda a, b: iterate_until(lambda x: f(a, x), b, g))
 
+@defop_unary('Z')
+def oper_unary_Z(f):
+    raise Exception("Unary 'Z' not implemented.")
+
+@defop_binary('Z')
+def oper_modify_indices(f, g):
+    if is_value(f):
+        return oper_modify_indices(oper_const_or_flip(f), g)
+    if is_value(g):
+        return oper_modify_indices(f, oper_const_or_flip(g))
+    def modify_indices(ind, mod, a):
+        indices = thread_unary(lambda x: x if is_value(x) else flatten(x), -2)(ind(a))
+        new_items = mod(func_index(indices, a))
+        if is_atom(indices):
+            indices = [indices]
+            new_items = [new_items]
+        if is_atom(new_items):
+            new_items = [new_items]*len(indices)
+        a = full_copy(a)
+        for index, item in zip(indices, new_items):
+            if is_atom(a):
+                a = item
+                continue
+            focus = old_focus = a
+            old_coord = 0
+            if is_atom(index):
+                index = [index]
+            for coord in index:
+                new_focus = focus[int(coord) % len(focus)]
+                old_coord = coord
+                old_focus = focus
+                if is_atom(new_focus):
+                    break
+                focus = new_focus
+            old_focus[int(old_coord) % len(old_focus)] = item
+        return a
+    return variadize(lambda a: modify_indices(f, g, a),
+                     lambda a, b: modify_indices(lambda x: f(a, x), lambda x: g(a, x), b))
 
 func_defs = {c:variadize(f) for (c,f) in func_defs.items()}
 oper_defs = {c:variadize(f) for (c,f) in oper_defs.items()}

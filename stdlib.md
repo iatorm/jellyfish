@@ -175,3 +175,11 @@ In this table, threaded arguments are mentioned separately in the description.
 |        |                            | **a** (any), **b** (any) | Iterate **~(a, g)** on **b** until **x** occurs, return each step |
 |        | **f** (func), **g** (func) | **a** (any)              | Iterate **f** on **a** until **g(a, f(a))** is truthy |
 |        |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** until **g(b, f(a, b))** is truthy |
+| `Z`    | **x** (val), **y** (val)   | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **y** |
+|        | **x** (val), **y** (val)   | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **y** |
+|        | **f** (func), **y** (val)  | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **y** |
+|        |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **y** |
+|        | **x** (val), **g** (func)  | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **g(a)** |
+|        |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **g(a, b)** |
+|        | **f** (func), **g** (func) | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **g(a)** |
+|        |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **g(a, b)** |
