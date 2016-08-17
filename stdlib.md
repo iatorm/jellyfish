@@ -90,6 +90,12 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | **a'** (list), **b** (any) |  1, -1    | **b** reshaped according to shape vector **a** |
 | `@`    | **a** (any)                | -1        | Indices of all atoms in **a** |
 |        | **a'** (list), **b** (any) | -2, -1    | Item of **b** at (multidimensional) index **a** |
+| `?`    | **a** (atom)               | -1        | Random number between **0** and **a** | If **a = 0**, random float between **0** and **1** |
+|        | **a** (list)               | -1        | Random permutation of **a** |
+|        | **a** (atom), **b** (atom) |  1, -1    | **a** random elements between **0** and **b** in order |
+|        | **a** (atom), **b** (list) |  1, -1    | **a** random elements of **b** in order |
+|        | **a** (list), **b** (atom) |  1, -1    | Disjoint random subsequences of **range(b)**, lengths given by **a** |
+|        | **a** (list), **b** (list) |  1, -1    | Disjoint random subsequences of **b**, lengths given by **a** |
 
 ## Operators
 

@@ -2,6 +2,7 @@ from utils import *
 from print_parse import *
 import sys
 import math
+import random
 import itertools
 from enum import Enum
 
@@ -507,6 +508,43 @@ def func_index(a, b):
         if is_atom(b):
             return b
     return b
+
+@defun_unary('?')
+def func_random_gen(a):
+    if is_atom(a):
+        x = a.value
+        if type(x) == float:
+            if x >= 0:
+                res = random.uniform(0, x)
+            else:
+                res = random.uniform(x, 0)
+        elif x == 0:
+            res = random.random()
+        elif x > 0:
+            res = random.randrange(0, x)
+        else:
+            res = random.rangrange(x+1, 1)
+        return Atom(a.type, res)
+    else:
+        res = a[:]
+        random.shuffle(res)
+        return res
+
+@defun_binary('?')
+@threaded_binary(1, -1)
+def func_random_choice(a, b):
+    if is_atom(b):
+        b = func_unary_range(b)
+    if is_atom(a):
+        chosen = sorted(random.sample(range(len(b)), min(len(b), int(a))))
+        return [b[i] for i in chosen]
+    else:
+        res = []
+        for item in a:
+            chosen = sorted(random.sample(range(len(b)), min(len(b), int(item))))
+            res.append([b[i] for i in chosen])
+            b = [val for (i, val) in enumerate(b) if i not in chosen]
+        return res
 
 def variadize(func, binary=None):
     if binary is None:
