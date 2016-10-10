@@ -14,22 +14,40 @@ class Atom:
         return int(self.value)
 
     def __eq__(self, other):
-        return self.value == other.value
+        if isinstance(other, Atom):
+            return self.value == other.value
+        else:
+            return False
 
     def __ne__(self, other):
-        return self.value != other.value
+        if isinstance(other, Atom):
+            return self.value != other.value
+        else:
+            return True
 
     def __lt__(self, other):
-        return self.value < other.value
+        if isinstance(other, Atom):
+            return self.value < other.value
+        else:
+            return True
 
     def __le__(self, other):
-        return self.value <= other.value
+        if isinstance(other, Atom):
+            return self.value <= other.value
+        else:
+            return True
 
     def __gt__(self, other):
-        return self.value > other.value
+        if isinstance(other, Atom):
+            return self.value > other.value
+        else:
+            return False
 
     def __ge__(self, other):
-        return self.value >= other.value
+        if isinstance(other, Atom):
+            return self.value >= other.value
+        else:
+            return False
 
     def __repr__(self):
         if self.type == AtomType.num:
