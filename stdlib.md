@@ -47,6 +47,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | **a** (any), **b** (atom)  |  1,  0    | Base-**a** digits of **b** |
 | `d`    | **a** (any)                |  1        | Digit(s) **a** as base-2 number |
 |        | **a** (any), **b** (any)   |  1,  1    | Digit(s) **b** as base-**a** number |
+| `=`    | **a** (any), **b** (any)   | -1, -1    | **1** if **a = b**, otherwise **0** |
 | `<`    | **a** (atom)               | -1        | **a - 1** |
 |        | **a** (list)               | -1        | **head(a)** |
 |        | **a** (any), **b** (any)   | -1, -1    | **1** if **a < b**, otherwise **0** |
