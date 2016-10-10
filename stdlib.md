@@ -59,7 +59,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | **a** (atom), **b** (atom) |  0, -1    | **b! / (b-a)!** |
 |        | **a** (atom), **b** (list) |  0, -1    | Length-**a** permutations of **b** |
 | `c`    | **a** (atom)               |  0        | **char(a)** |
-|        | **a'** (list), **b'** (list)| -1, -1   | **1** if **a** is a sub-multiset of **b**, otherwise **0** |
+|        | **a** (any), **b'** (list) | -1, -1    | **1** if **a** occurs in **b**, otherwise **0** |
 | `C`    | **a** (atom)               | -1        | **2<sup>a</sup>** |
 |        | **a** (list)               | -1        | Subsequences of **a** |
 |        | **a** (atom), **b** (atom) |  0, -1    | **b! / a!\*(b-a)!** |

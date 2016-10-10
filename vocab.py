@@ -308,12 +308,10 @@ def func_binary_permutations(a, b):
 def func_to_char(a): return Atom(AtomType.char, a.value)
 
 @defun_binary('c')
-def func_is_subset(a, b):
-    if is_atom(a):
-        a = [a]
+def func_elem(a, b):
     if is_atom(b):
         b = [b]
-    return all(a.count(x) <= b.count(x) for x in uniques(a))
+    return to_num_atom(int(a in b))
 
 @defun_unary('C')
 def func_subsequences(a):
