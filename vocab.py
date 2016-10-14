@@ -596,7 +596,7 @@ def oper_curry_or_precompose(f, g):
     elif is_value(g):
         return variadize(lambda a: f(a, g),
                          lambda a, b: f(a, g))
-    return variadize(lambda a: f(g(a)),
+    return variadize(lambda a: g(f(a)),
                      lambda a, b: f(g(a), g(b)))
 
 @defop_unary('&')

@@ -102,93 +102,93 @@ A **'** after an argument means that atomic arguments are converted to singleton
 
 In this table, threaded arguments are mentioned separately in the description.
 
-| Symbol | Name       | Operator args              | Function args            | Result | Notes |
-| :----: | ---------- | -------------------------- | ------------------------ | ------ | ----- |
-| `_`    | Call       | **f** (func)               | **a** (any)              | **f(a)** |
-|        |            |                            | **a** (any), **b** (any) | **f(a, b)** |
-|        |            | **f** (func), **y** (val)  | **a (,b)** (any)         | **f(y)** |
-|        |            | **x** (val), **g** (func)  | **a (,b)** (any)         | **g(x)** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **f(a)** |
-|        |            |                            | **a** (any), **b** (any) | **f(a, b)** |
-| `~`    | Constant   | **x** (val)                | **a (, b)** (any)        | **x** |
-|        | Flip       | **f** (func)               | **a** (any)              | **f(a)** |
-|        |            |                            | **a** (any), **b** (any) | **f(b, a)** |
-|        | Constant   | **x** (val), **y** (val)   | **a (,b)** (any)         | **[x, y]** |
-|        | Curry      | **f** (func), **y** (val)  | **a (,b)** (any)         | **f(a, y)** |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | **g(x, a)** |
-|        |            |                            | **a** (any), **b** (any) | **g(x, b)** |
-|        | Compose    | **f** (func), **g** (func) | **a** (any)              | **f(g(a))** |
-|        |            |                            | **a** (any), **b** (any) | **f(g(a), g(b))** |
-| `&`    | Swap arity | **f** (func)               | **a** (any)              | **f(a, a)** |
-|        |            |                            | **a** (any), **b** (any) | **f(b)** |
-|        | Bi-compose | **f** (func), **y** (val)  | **a** (any)              | **f(f(y, a), y)** |
-|        |            |                            | **a** (any), **b** (any) | **b → f(f(y, b), y)** iterated **a** times |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | **g(x, g(a, x))** |
-|        |            |                            | **a** (any), **b** (any) | **b → g(x, g(b, x))** iterated **a** times |
-|        | Compose    | **f** (func), **g** (func) | **a** (any)              | **f(g(a))** |
-|        |            |                            | **a** (any), **b** (any) | **f(g(a, b))** |
-| `(`    | Left hook  | **f** (func)               | **a** (any)              | **[f(a), a]** |
-|        |            |                            | **a** (any), **b** (any) | **[f(a), b]** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **g(f(a), a)** |
-|        |            |                            | **a** (any), **b** (any) | **g(f(a), b)** |
-| `)`    | Right hook | **f** (func)               | **a** (any)              | **[a, f(a)]** |
-|        |            |                            | **a** (any), **b** (any) | **[a, f(b)]** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **f(a, g(a))** |
-|        |            |                            | **a** (any), **b** (any) | **f(a, g(b))** |
-| `[`    | Left fork  | **f** (func)               | **a** (any)              | **[f(a), a]** |
-|        |            |                            | **a** (any), **b** (any) | **[f(a, b), b]** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **g(f(a), a)** |
-|        |            |                            | **a** (any), **b** (any) | **g(f(a, b), b)** |
-| `]`    | Right fork | **f** (func)               | **a** (any)              | **[a, f(a)]** |
-|        |            |                            | **a** (any), **b** (any) | **[a, f(a, b)]** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **f(a, g(a))** |
-|        |            |                            | **a** (any), **b** (any) | **f(a, g(a, b))** |
-| `` ` ``| Thread     | **x** (val)                | **a (,b)** (any)         | **~(x)** threaded to level **0** |
-|        |            | **f** (func)               | **a (,b)** (any)         | **f** threaded to level **0** |
-|        |            | **x** (val), **y** (val)   | **a (,b)** (any)         | **~(x)** threaded to level(s) **y** | **y** is reshaped to shape **[3]** |
-|        |            | **f** (func), **y** (val)  | **a (,b)** (any)         | **f** threaded to level(s) **y** | **y** is reshaped to shape **[3]** |
-|        |            | **x** (val), **g** (func)  | **a (,b)** (any)         | **g** threaded to level(s) **x** | **x** is reshaped to shape **[3]** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **g(a)**, with **g** threaded to level(s) **f(a)** | **f(a)** is reshaped to shape **[3]** |
-|        |            |                            | **a** (any), **b** (any) | **g(a, b)**, with **g** threaded to level(s) **f(a, b)** | **f(a, b)** is reshaped to shape **[3]** |
-| `L`    | Levels     | **x** (val)                | **a** (any)              | Items of **a** of height **x** or greater |
-|        |            |                            | **a** (any), **b** (any) | Items of **a** and **b** of height **x** or greater, paired together |
-|        |            | **f** (func)               | **a** (any)              | **f** applied to atoms of **a** |
-|        |            |                            | **a** (any), **b** (any) | **f** applied to atom-pairs of **a** and **b** |
-|        |            | **x** (val), **y** (val)   | **a** (any)              | **~(y)** applied to items of **a** of height **x** or greater |
-|        |            |                            | **a** (any), **b** (any) | **~(y)** applied to item-pairs of **a** and **b** of height **x** or greater |
-|        |            | **f** (func), **y** (val)  | **a** (any)              | **~(y)** applied to items of **a** of height **f(a)** or greater |
-|        |            |                            | **a** (any), **b** (any) | **~(y)** applied to item-pairs of **a** and **b** of height **f(a, b)** or greater |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | **g** applied to items of **a** of height **x** or greater |
-|        |            |                            | **a** (any), **b** (any) | **g** applied to item-pairs of **a** and **b** of height **x** or greater |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **g** applied to items of **a** of height **f(a)** or greater |
-|        |            |                            | **a** (any), **b** (any) | **g** applied to item-pairs of **a** and **b** of height **f(a, b)** or greater |
-| `/`    | Join       | **x** (val)                | **a** (any)              | Join **a** **x** times | **x** threaded to level 0 |
-|        |            |                            | **a** (any), **b** (any) | Insert copies of **a** between items of **b**, and join **x** times | **x** threaded to level 0 |
-|        | Fold       | **f** (func)               | **a** (any)              | Fold **f** over **a** from the left |
-|        |            |                            | **a** (any), **b** (any) | Fold **f** over **b** from the left with initial value **a** |
-|        | If         | **x** (val), **y** (val)   | **a** (any)              | **x** if **a** is truthy, else **y** |
-|        |            |                            | **a** (any), **b** (any) | **[x, b]** if **a** is truthy, else **[y, b]** |
-|        |            | **f** (func), **y** (val)  | **a** (any)              | **f(y)** if **a** is truthy, else **y** |
-|        |            |                            | **a** (any), **b** (any) | **f(b)** if **a** is truthy, else **y** |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | **g(a)** if **f** is truthy, else **a** |
-|        |            |                            | **a** (any), **b** (any) | **g(b)** if **f** is truthy, else **g(a)** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **g(a)** if **f(a)** is truthy, else **a** |
-|        |            |                            | **a** (any), **b** (any) | **f(b)** if **a** is truthy, else **g(b)** |
-| `\`    | Substrings | **x** (val)                | **a** (any)              | Substrings of **a** of length **x** | **x < 0** gives non-overapping substrings; **x** threaded to level 0 |
-|        | Select     |                            | **a** (any), **b** (any) | Select item from **a** if **x** is even, from **b** if odd | Threaded to level -2 for **a** and **b**, level 0 for **x** |
-|        | Prefixes   | **f** (func)               | **a** (any)              | **f(p)** for every prefix **p** of **a** |
-|        | Substrings |                            | **a** (any), **b** (any) | **f(s)** for every length-**a** substring of **b** | **a** threaded to level 0 |
-|        | Iterate    | **f** (func), **y** (val)  | **a** (any)              | Iterate **f** on **a** **y** times | **y** threaded to level 0 |
-|        |            |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** **y** times | **y** threaded to level 0 |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | Iterate **g** on **a** until **x** occurs, return each step |
-|        |            |                            | **a** (any), **b** (any) | Iterate **~(a, g)** on **b** until **x** occurs, return each step |
-|        |            | **f** (func), **g** (func) | **a** (any)              | Iterate **f** on **a** until **g(a, f(a))** is truthy |
-|        |            |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** until **g(b, f(a, b))** is truthy |
-| `Z`    | Replace at | **x** (val), **y** (val)   | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **y** |
-|        |            |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **y** |
-|        |            | **f** (func), **y** (val)  | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **y** |
-|        |            |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **y** |
-|        |            | **x** (val), **g** (func)  | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **g(a)** |
-|        |            |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **g(a, b)** |
-|        |            | **f** (func), **g** (func) | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **g(a)** |
-|        |            |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **g(a, b)** |
+| Symbol | Name         | Operator args              | Function args            | Result | Notes |
+| :----: | ------------ | -------------------------- | ------------------------ | ------ | ----- |
+| `_`    | Call         | **f** (func)               | **a** (any)              | **f(a)** |
+|        |              |                            | **a** (any), **b** (any) | **f(a, b)** |
+|        |              | **f** (func), **y** (val)  | **a (,b)** (any)         | **f(y)** |
+|        |              | **x** (val), **g** (func)  | **a (,b)** (any)         | **g(x)** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **f(a)** |
+|        |              |                            | **a** (any), **b** (any) | **f(a, b)** |
+| `~`    | Constant     | **x** (val)                | **a (, b)** (any)        | **x** |
+|        | Flip         | **f** (func)               | **a** (any)              | **f(a)** |
+|        |              |                            | **a** (any), **b** (any) | **f(b, a)** |
+|        | Constant     | **x** (val), **y** (val)   | **a (,b)** (any)         | **[x, y]** |
+|        | Curry        | **f** (func), **y** (val)  | **a (,b)** (any)         | **f(a, y)** |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | **g(x, a)** |
+|        |              |                            | **a** (any), **b** (any) | **g(x, b)** |
+|        | Flip compose | **f** (func), **g** (func) | **a** (any)              | **g(f(a))** |
+|        | Post-compose |                            | **a** (any), **b** (any) | **f(g(a), g(b))** |
+| `&`    | Swap arity   | **f** (func)               | **a** (any)              | **f(a, a)** |
+|        |              |                            | **a** (any), **b** (any) | **f(b)** |
+|        | Bi-compose   | **f** (func), **y** (val)  | **a** (any)              | **f(f(y, a), y)** |
+|        |              |                            | **a** (any), **b** (any) | **b → f(f(y, b), y)** iterated **a** times |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | **g(x, g(a, x))** |
+|        |              |                            | **a** (any), **b** (any) | **b → g(x, g(b, x))** iterated **a** times |
+|        | Compose      | **f** (func), **g** (func) | **a** (any)              | **f(g(a))** |
+|        | Pre-compose  |                            | **a** (any), **b** (any) | **f(g(a, b))** |
+| `(`    | Left hook    | **f** (func)               | **a** (any)              | **[f(a), a]** |
+|        |              |                            | **a** (any), **b** (any) | **[f(a), b]** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **g(f(a), a)** |
+|        |              |                            | **a** (any), **b** (any) | **g(f(a), b)** |
+| `)`    | Right hook   | **f** (func)               | **a** (any)              | **[a, f(a)]** |
+|        |              |                            | **a** (any), **b** (any) | **[a, f(b)]** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **f(a, g(a))** |
+|        |              |                            | **a** (any), **b** (any) | **f(a, g(b))** |
+| `[`    | Left fork    | **f** (func)               | **a** (any)              | **[f(a), a]** |
+|        |              |                            | **a** (any), **b** (any) | **[f(a, b), b]** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **g(f(a), a)** |
+|        |              |                            | **a** (any), **b** (any) | **g(f(a, b), b)** |
+| `]`    | Right fork   | **f** (func)               | **a** (any)              | **[a, f(a)]** |
+|        |              |                            | **a** (any), **b** (any) | **[a, f(a, b)]** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **f(a, g(a))** |
+|        |              |                            | **a** (any), **b** (any) | **f(a, g(a, b))** |
+| `` ` ``| Thread       | **x** (val)                | **a (,b)** (any)         | **~(x)** threaded to level **0** |
+|        |              | **f** (func)               | **a (,b)** (any)         | **f** threaded to level **0** |
+|        |              | **x** (val), **y** (val)   | **a (,b)** (any)         | **~(x)** threaded to level(s) **y** | **y** is reshaped to shape **[3]** |
+|        |              | **f** (func), **y** (val)  | **a (,b)** (any)         | **f** threaded to level(s) **y** | **y** is reshaped to shape **[3]** |
+|        |              | **x** (val), **g** (func)  | **a (,b)** (any)         | **g** threaded to level(s) **x** | **x** is reshaped to shape **[3]** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **g(a)**, with **g** threaded to level(s) **f(a)** | **f(a)** is reshaped to shape **[3]** |
+|        |              |                            | **a** (any), **b** (any) | **g(a, b)**, with **g** threaded to level(s) **f(a, b)** | **f(a, b)** is reshaped to shape **[3]** |
+| `L`    | Levels       | **x** (val)                | **a** (any)              | Items of **a** of height **x** or greater |
+|        |              |                            | **a** (any), **b** (any) | Items of **a** and **b** of height **x** or greater, paired together |
+|        |              | **f** (func)               | **a** (any)              | **f** applied to atoms of **a** |
+|        |              |                            | **a** (any), **b** (any) | **f** applied to atom-pairs of **a** and **b** |
+|        |              | **x** (val), **y** (val)   | **a** (any)              | **~(y)** applied to items of **a** of height **x** or greater |
+|        |              |                            | **a** (any), **b** (any) | **~(y)** applied to item-pairs of **a** and **b** of height **x** or greater |
+|        |              | **f** (func), **y** (val)  | **a** (any)              | **~(y)** applied to items of **a** of height **f(a)** or greater |
+|        |              |                            | **a** (any), **b** (any) | **~(y)** applied to item-pairs of **a** and **b** of height **f(a, b)** or greater |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | **g** applied to items of **a** of height **x** or greater |
+|        |              |                            | **a** (any), **b** (any) | **g** applied to item-pairs of **a** and **b** of height **x** or greater |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **g** applied to items of **a** of height **f(a)** or greater |
+|        |              |                            | **a** (any), **b** (any) | **g** applied to item-pairs of **a** and **b** of height **f(a, b)** or greater |
+| `/`    | Join         | **x** (val)                | **a** (any)              | Join **a** **x** times | **x** threaded to level 0 |
+|        |              |                            | **a** (any), **b** (any) | Insert copies of **a** between items of **b**, and join **x** times | **x** threaded to level 0 |
+|        | Fold         | **f** (func)               | **a** (any)              | Fold **f** over **a** from the left |
+|        |              |                            | **a** (any), **b** (any) | Fold **f** over **b** from the left with initial value **a** |
+|        | If           | **x** (val), **y** (val)   | **a** (any)              | **x** if **a** is truthy, else **y** |
+|        |              |                            | **a** (any), **b** (any) | **[x, b]** if **a** is truthy, else **[y, b]** |
+|        |              | **f** (func), **y** (val)  | **a** (any)              | **f(y)** if **a** is truthy, else **y** |
+|        |              |                            | **a** (any), **b** (any) | **f(b)** if **a** is truthy, else **y** |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | **g(a)** if **f** is truthy, else **a** |
+|        |              |                            | **a** (any), **b** (any) | **g(b)** if **f** is truthy, else **g(a)** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **g(a)** if **f(a)** is truthy, else **a** |
+|        |              |                            | **a** (any), **b** (any) | **f(b)** if **a** is truthy, else **g(b)** |
+| `\`    | Substrings   | **x** (val)                | **a** (any)              | Substrings of **a** of length **x** | **x < 0** gives non-overapping substrings; **x** threaded to level 0 |
+|        | Select       |                            | **a** (any), **b** (any) | Select item from **a** if **x** is even, from **b** if odd | Threaded to level -2 for **a** and **b**, level 0 for **x** |
+|        | Prefixes     | **f** (func)               | **a** (any)              | **f(p)** for every prefix **p** of **a** |
+|        | Substrings   |                            | **a** (any), **b** (any) | **f(s)** for every length-**a** substring of **b** | **a** threaded to level 0 |
+|        | Iterate      | **f** (func), **y** (val)  | **a** (any)              | Iterate **f** on **a** **y** times | **y** threaded to level 0 |
+|        |              |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** **y** times | **y** threaded to level 0 |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | Iterate **g** on **a** until **x** occurs, return each step |
+|        |              |                            | **a** (any), **b** (any) | Iterate **~(a, g)** on **b** until **x** occurs, return each step |
+|        |              | **f** (func), **g** (func) | **a** (any)              | Iterate **f** on **a** until **g(a, f(a))** is truthy |
+|        |              |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** until **g(b, f(a, b))** is truthy |
+| `Z`    | Replace at   | **x** (val), **y** (val)   | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **y** |
+|        |              |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **y** |
+|        |              | **f** (func), **y** (val)  | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **y** |
+|        |              |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **y** |
+|        |              | **x** (val), **g** (func)  | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **g(a)** |
+|        |              |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **g(a, b)** |
+|        |              | **f** (func), **g** (func) | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **g(a)** |
+|        |              |                            | **a** (any), **b** (any) | **b** with elements at indices **f(a, b)** replaced by corresponding items of **g(a, b)** |
