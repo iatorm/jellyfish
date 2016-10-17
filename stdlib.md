@@ -40,8 +40,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | Minimum            | **a** (any), **b** (any)   | -1, -1    | **min(a, b)** |
 | `M`    | Ceiling            | **a** (atom)               |  0        | **ceiling(a)** |
 |        | Maximum            | **a** (any), **b** (any)   | -1, -1    | **max(a, b)** |
-| `x`    | Cartesian product  | **a** (atom)               | -1        | **a** |
-|        |                    | **a** (list)               | -1        | Cartesian product of items of **a** |
+| `x`    | Prime factors      | **a** (atom)               |  0        | Prime factors of **a** in ascending order |
 |        | XOR                | **a** (atom), **b** (atom) |  0,  0    | **a xor b** |
 | `b`    | Base encode        | **a** (atom)               |  0        | Base-2 digits of **a** |
 |        |                    | **a** (any), **b** (atom)  |  1,  0    | Base-**a** digits of **b** |
@@ -72,7 +71,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | List difference    | **a'** (list), **b'** (list)| -1, -1   | **a** with items of **b** removed |
 | `#`    | Length             | **a** (atom)               | -1        | Number of base-10 digits in **a** |
 |        |                    | **a** (list)               | -1        | Length of **a** |
-|        | Repeat             |  **a** (atom), **b'** (list)| -1, -1    | Each item of **b** repeated **a** times |
+|        | Repeat             | **a** (atom), **b'** (list)| -1, -1    | Each item of **b** repeated **a** times |
 |        | Repeat/filter      | **a** (list), **b'** (list)| -1, -1    | Each item of **b** repeated by the corresponding item of **a** |
 | `R`    | Reverse            | **a** (atom)               | -1        | **a** |
 |        |                    | **a** (list)               | -1        | **a** reversed |
@@ -184,6 +183,10 @@ In this table, threaded arguments are mentioned separately in the description.
 |        |              |                            | **a** (any), **b** (any) | Iterate **~(a, g)** on **b** until **x** occurs, return each step |
 |        |              | **f** (func), **g** (func) | **a** (any)              | Iterate **f** on **a** until **g(a, f(a))** is truthy |
 |        |              |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** until **g(b, f(a, b))** is truthy |
+| `o`    | Product      | **x** (val)                | **a** (any)              | Cartesian product of **a** on level **x** | **x** threaded to level 0 |
+|        |              |                            | **a** (any), **b** (any) | Pair **a** and **b** at level **x**, take Cartesian product on level **x+1** | **x** threaded to level 0 |
+|        | Each         | **f** (func)               | **a** (any)              | **f** threaded to level -2 |
+|        | Table        |                            | **a** (any), **b** (any) | **f** threaded to levels -2 and -1 |
 | `Z`    | Replace at   | **x** (val), **y** (val)   | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **y** |
 |        |              |                            | **a** (any), **b** (any) | **b** with elements at indices **x** replaced by corresponding items of **y** |
 |        |              | **f** (func), **y** (val)  | **a** (any)              | **a** with elements at indices **f(a)** replaced by corresponding items of **y** |

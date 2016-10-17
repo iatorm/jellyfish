@@ -179,11 +179,25 @@ def func_ceil(a): return math.ceil(a)
 def func_max(a, b): return max(a, b)
 
 @defun_unary('x')
-def func_cart_product(a):
-    if is_atom(a):
-        return a
+@threaded_unary(0)
+def func_factorize(a):
+    n = int(a)
+    if n == 0:
+        return [to_num_atom(0)]
+    if n > 0:
+        fact = []
     else:
-        return list(cartesian_product(a))
+        n = -n
+        fact = [to_num_atom(-1)]
+    div = 2
+    while n > 1:
+        if n % div == 0:
+            n //= div
+            fact.append(to_num_atom(div))
+        else:
+            div += 1
+    return fact
+    
 
 @defun_binary('x')
 @threaded_binary(0, 0)
@@ -780,6 +794,17 @@ def oper_iterate(f, g):
                          lambda a, b: thread_unary(lambda n: iterate(lambda x: f(a, x), b, int(n)), 0)(g))
     return variadize(lambda a: iterate_until(f, a, g),
                      lambda a, b: iterate_until(lambda x: f(a, x), b, g))
+
+@defop_unary('o')
+def oper_prod_table(f):
+    if is_value(f):
+        return variadize(lambda a: thread_unary(lambda n: list(cartesian_product(a, int(n))), 0)(f),
+                         lambda a, b: thread_unary(lambda n: list(cartesian_product(thread_binary(lambda x, y: [x, y], int(n), int(n))(a, b), int(n)+1)), 0)(f))
+    return oper_binary_thread(f, [-2, -2, -1])
+
+@defop_binary('o')
+def oper_binary_o(f, g):
+    raise Exception("Binary 'o' not implemented.")
 
 @defop_unary('Z')
 def oper_unary_Z(f):

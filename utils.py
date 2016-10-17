@@ -135,13 +135,16 @@ def intersperse(value, array):
         res += [value, item]
     return res
 
-def cartesian_product(array):
-    if array:
+def cartesian_product(array, level=-2):
+    if is_atom(array) or level >= 0  and height(array) < level:
+        yield array
+    elif level == -1 or array and level == height(array):
+        for item in array:
+            yield item
+    elif array:
         head, *rest = array
-        if is_atom(head):
-            head = [head]
-        for item in head:
-            for word in cartesian_product(rest):
+        for item in cartesian_product(head, level+1 if level < 0 else level):
+            for word in cartesian_product(rest, level):
                 yield [item] + word
     else:
         yield []
