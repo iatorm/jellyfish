@@ -795,16 +795,18 @@ def oper_iterate(f, g):
     return variadize(lambda a: iterate_until(f, a, g),
                      lambda a, b: iterate_until(lambda x: f(a, x), b, g))
 
-@defop_unary('o')
+@defop_unary('O')
 def oper_prod_table(f):
     if is_value(f):
         return variadize(lambda a: thread_unary(lambda n: list(cartesian_product(a, int(n))), 0)(f),
-                         lambda a, b: thread_unary(lambda n: list(cartesian_product(thread_binary(lambda x, y: [x, y], int(n), int(n))(a, b), int(n)+1)), 0)(f))
+                         lambda a, b: thread_unary(lambda n: list(cartesian_product(thread_binary(lambda x, y: [x, y], int(n), int(n))(a, b),
+                                                                                    int(n)+1 if int(n) >= 0 else int(n))),
+                                                   0)(f))
     return oper_binary_thread(f, [to_num_atom(-2), to_num_atom(-2), to_num_atom(-1)])
 
-@defop_binary('o')
-def oper_binary_o(f, g):
-    raise Exception("Binary 'o' not implemented.")
+@defop_binary('O')
+def oper_binary_O(f, g):
+    raise Exception("Binary 'O' not implemented.")
 
 @defop_unary('Z')
 def oper_unary_Z(f):

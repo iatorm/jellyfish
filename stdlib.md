@@ -183,8 +183,8 @@ In this table, threaded arguments are mentioned separately in the description.
 |        |              |                            | **a** (any), **b** (any) | Iterate **~(a, g)** on **b** until **x** occurs, return each step |
 |        |              | **f** (func), **g** (func) | **a** (any)              | Iterate **f** on **a** until **g(a, f(a))** is truthy |
 |        |              |                            | **a** (any), **b** (any) | Iterate **~(a, f)** on **b** until **g(b, f(a, b))** is truthy |
-| `o`    | Product      | **x** (val)                | **a** (any)              | Cartesian product of **a** on level **x** | **x** threaded to level 0 |
-|        |              |                            | **a** (any), **b** (any) | Pair **a** and **b** at level **x**, take Cartesian product on level **x+1** | **x** threaded to level 0 |
+| `O`    | Product      | **x** (val)                | **a** (any)              | Cartesian product of **a** on level **x** | **x** threaded to level 0 |
+|        |              |                            | **a** (any), **b** (any) | Cartesian product of choosing level-**x** elements from **a** or **b** | **x** threaded to level 0 |
 |        | Each         | **f** (func)               | **a** (any)              | **f** threaded to level -2 |
 |        | Table        |                            | **a** (any), **b** (any) | **f** threaded to levels -2 and -1 |
 | `Z`    | Replace at   | **x** (val), **y** (val)   | **a** (any)              | **a** with elements at indices **x** replaced by corresponding items of **y** |
