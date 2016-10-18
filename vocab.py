@@ -800,7 +800,7 @@ def oper_prod_table(f):
     if is_value(f):
         return variadize(lambda a: thread_unary(lambda n: list(cartesian_product(a, int(n))), 0)(f),
                          lambda a, b: thread_unary(lambda n: list(cartesian_product(thread_binary(lambda x, y: [x, y], int(n), int(n))(a, b), int(n)+1)), 0)(f))
-    return oper_binary_thread(f, [-2, -2, -1])
+    return oper_binary_thread(f, [to_num_atom(-2), to_num_atom(-2), to_num_atom(-1)])
 
 @defop_binary('o')
 def oper_binary_o(f, g):
