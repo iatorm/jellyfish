@@ -48,11 +48,19 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        |                    | **a** (any), **b** (any)   |  1,  1    | Digit(s) **b** as base-**a** number |
 | `=`    | Equality           | **a** (any), **b** (any)   | -1, -1    | **1** if **a = b**, otherwise **0** |
 | `<`    | Decrement          | **a** (atom)               | -1        | **a - 1** |
-|        | Head               | **a** (list)               | -1        | **head(a)** |
+|        | Head               | **a** (list)               | -1        | First item of **a** |
 |        | Less than          | **a** (any), **b** (any)   | -1, -1    | **1** if **a < b**, otherwise **0** |
 | `>`    | Increment          | **a** (atom)               | -1        | **a + 1** |
-|        | Tail               | **a** (list)               | -1        | **tail(a)** |
+|        | Tail               | **a** (list)               | -1        | **a** with first item removed |
 |        | Greater than       | **a** (any), **b** (any)   | -1, -1    | **1** if **a > b**, otherwise **0** |
+| `^`    | Square             | **a** (atom)               | -1        | **a<sup>2</sup>** |
+|        | Init               | **a** (list)               | -1        | **a** with last item removed |
+|        | Power              | **a** (atom), **b** (atom) |  0, -1    | **b<sup>a</sup>** |
+|        | Take               | **a** (atom), **b** (list) |  0, -1    | **a** items from **b** | From beginning if **a > 0**, from end if **a < 0** |
+| `v`    | Square root        | **a** (atom)               | -1        | Square root of **a** |
+|        | Last               | **a** (list)               | -1        | Last item of **a** |
+|        | Root               | **a** (atom), **b** (atom) |  0, -1    | **b<sup>(1/a)</sup>** |
+|        | Drop               | **a** (atom), **b** (list) |  0, -1    | **b** with **a** items removed | From beginning if **a > 0**, from end if **a < 0** |
 | `!`    | Factorial          | **a** (atom)               | -1        | **a!** |
 |        | Permutations       | **a** (list)               | -1        | Permutations of **a** |
 |        | Falling factorial  | **a** (atom), **b** (atom) |  0, -1    | **b! / (b-a)!** |
@@ -79,6 +87,8 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        |                    | **a** (atom), **b** (list) |  0, -1    | **b** rotated **a** steps to the left |
 | `k`    | To indices         | **a'** (list)              |  1        | Convert bitmask **a** to list of indices |
 | `K`    | To bitmask         | **a'** (list)              |  1        | Convert list of indices **a** to bitmask |
+| `o`    | Order              | **a'** (list)              | -1        | **a** in increasing order |
+|        |                    | **a'** (list), **b'** (list)| -1, -1   | **b** ordered using **a** as keys | **a** is repeated or truncated to have **b**'s length |
 | `r`    | Range              | **a** (atom)               | -1        | Range from **0** to **a-1** | From **a+1** to **0** if **a < 0** |
 |        |                    | **a** (list)               | -1        | Cartesian product of ranges for atoms in **a** |
 |        |                    | **a** (any), **b** (any)   | -1, -1    | Range from **a** to **b-1**, or Cartesian product of ranges like above |

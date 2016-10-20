@@ -302,6 +302,42 @@ def func_greater_than(a, b):
     else:
         return to_num_atom(int(a > b))
 
+@defun_unary('^')
+def func_init_sqr(a):
+    if is_atom(a):
+        return Atom(a.type, a.value * a.value)
+    else:
+        return a[:-1]
+
+@defun_binary('^')
+@threaded_binary(0, -1)
+def func_take_pow(a, b):
+    n = a.value
+    if is_atom(b):
+        return Atom(a.type, b.value ** n)
+    elif n >= 0:
+        return b[:int(n)]
+    else:
+        return b[int(n):]
+
+@defun_unary('v')
+def func_last_sqrt(a):
+    if is_atom(a):
+        return Atom(a.type, math.sqrt(a.value))
+    else:
+        return a[-1]
+
+@defun_binary('v')
+@threaded_binary(0, -1)
+def func_drop_root(a, b):
+    n = a.value
+    if is_atom(b):
+        return Atom(a.type, b.value ** (1/n))
+    elif n >= 0:
+        return b[int(n):]
+    else:
+        return b[:int(n)]
+
 @defun_unary('!')
 def func_permutations(a):
     if is_atom(a):
@@ -450,6 +486,21 @@ def func_indices_to_mask(a):
 @defun_binary('K')
 def func_binary_K(a, b):
     raise Error("Binary 'K' not implemented.")
+
+@defun_unary('o')
+def func_sort(a):
+    if is_atom(a):
+        a = [a]
+    return list(sorted(a))
+
+@defun_binary('o')
+def func_binary_sort(a, b):
+    if is_atom(a) or not(a):
+        a = [a]
+    if is_atom(b):
+        b = [b]
+    a = (a*len(b))[:len(b)]
+    return [x for (y, x) in sorted(zip(a, b))]
 
 @defun_unary('r')
 def func_unary_range(a):
