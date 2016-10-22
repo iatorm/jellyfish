@@ -443,7 +443,7 @@ def func_repeat(a, b):
     if is_atom(b):
         b = [b]
     if is_atom(a):
-        return b * int(a)
+        a = [a]*len(b)
     else:
         return [y for (x,y) in zip(a,b) for _ in range(int(x))]
 
