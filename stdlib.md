@@ -34,7 +34,7 @@ A **'** after an argument means that atomic arguments are converted to singleton
 |        | Multiply           | **a** (atom), **b** (atom) |  0,  0    | **a * b** |
 | `%`    | Reciprocal         | **a** (atom)               |  0        | **1 / a** | Return **0** for **a = 0** |
 |        | Divide             | **a** (atom), **b** (atom) |  0,  0    | **b / a** | Return **0** for **a = 0** |
-| `|`    | Round              | **a** (atom)               |  0        | **round(a)** |
+| `\|`   | Round              | **a** (atom)               |  0        | **round(a)** |
 |        | Modulus            | **a** (atom), **b** (atom) |  0,  0    | **b mod a** | Return **0** for **a = 0** |
 | `m`    | Floor              | **a** (atom)               |  0        | **floor(a)** |
 |        | Minimum            | **a** (any), **b** (any)   | -1, -1    | **min(a, b)** |
